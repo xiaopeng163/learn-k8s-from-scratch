@@ -127,3 +127,78 @@ Install Steps for Windows
 
     Use "minikube <command> --help" for more information about a given command.
     PS C:\Users\Peng Xiao>
+
+minikube start
+~~~~~~~~~~~~~~~~
+
+
+以VirtualBox驱动和 v1.24.0版本的Kubernetes为例
+
+.. code-block:: powershell
+
+    minikube start --driver=virtualbox --kubernetes-version=v1.24.0
+
+
+kubectl
+~~~~~~~~~~
+
+可以通过minikube来运行kubectl
+
+.. code-block:: powershell
+
+    minikube kubectl -- <kubectl commands>
+
+为了方便，也可以把下面的alias加到powershell的 PROFILE里
+
+
+.. code-block:: powershell
+
+    function kubectl { minikube kubectl -- $args }
+    doskey kubectl=minikube kubectl $*
+
+
+Install Steps for MacOS
+----------------------------
+
+
+x86芯片
+~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
+    sudo install minikube-darwin-amd64 /usr/local/bin/minikube
+
+M1 ARM芯片
+~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-arm64
+    sudo install minikube-darwin-arm64 /usr/local/bin/minikube
+
+
+启动
+~~~~~~
+
+如果是x86芯片，可以使用VirtualBox
+
+
+.. code-block:: bash
+
+    minikube start --driver=virtualbox --kubernetes-version=v1.24.0
+
+
+如果是ARM芯片，可以使用docker
+
+
+.. code-block:: bash
+
+    minikube start --driver=docker --alsologtostderr --kubernetes-version=v1.24.0
+
+
+设置Alias
+
+.. code-block:: bash
+
+    alias kubectl="minikube kubectl --"
