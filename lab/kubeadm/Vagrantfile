@@ -12,33 +12,27 @@ Vagrant.require_version ">= 1.6.0"
 boxes = [
     {
         :name => "k8s-master",
-        :eth1 => "192.168.205.10",
+        :eth1 => "192.168.56.10",
         :mem => "2048",
         :cpu => "2"
     },
     {
         :name => "k8s-worker1",
-        :eth1 => "192.168.205.11",
+        :eth1 => "192.168.56.11",
         :mem => "2048",
         :cpu => "2"
     },
     {
         :name => "k8s-worker2",
-        :eth1 => "192.168.205.12",
+        :eth1 => "192.168.56.12",
         :mem => "2048",
         :cpu => "2"
     }
 ]
 
 Vagrant.configure(2) do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
-  # https://docs.vagrantup.com.
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/jammy64"
-
   boxes.each do |opts|
       config.vm.define opts[:name] do |config|
         config.vm.hostname = opts[:name]
@@ -56,3 +50,5 @@ Vagrant.configure(2) do |config|
         config.vm.network :private_network, ip: opts[:eth1]
       end
   end
+  config.vm.provision "shell", privileged: true, path: "./setup.sh"
+end
