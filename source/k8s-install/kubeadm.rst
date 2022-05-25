@@ -33,7 +33,7 @@ kubeadm
 
 .. warning::
 
-   如果你使用的是云服务提供的虚拟机，请确保把安全策略组配置好，确保三台机器之间可以访问任意端口，
+   如果你使用的是云服务提供的虚拟机，请确保把安全策略组配置好，确保三台机器之间可以访问任意端口，https://kubernetes.io/docs/reference/ports-and-protocols/
 
 
 
@@ -133,13 +133,16 @@ kubeadm
 初始化Kubeadm
 
 - ``--apiserver-advertise-address``  这个地址是本地用于和其他节点通信的IP地址
-- ``--pod-network-cidr``  这个是pod会分配的IP地址池，注意不要和本地其他地址冲突。
 
 .. code-block:: bash
 
-    vagrant@k8s-master:~$ sudo kubeadm init --apiserver-advertise-address=192.168.56.10 --pod-network-cidr=10.1.0.0/16
+    vagrant@k8s-master:~$ sudo kubeadm init --apiserver-advertise-address=192.168.56.10
 
-最后一段的输出要保存好
+最后一段的输出要保存好, 这一段指出后续需要做什么配置。
+
+- 1. 准备 .kube
+- 2. 部署pod network方案
+- 3. 添加worker节点
 
 .. code-block:: bash
 
@@ -161,13 +164,29 @@ kubeadm
 
     Then you can join any number of worker nodes by running the following on each as root:
 
-    kubeadm join 192.168.56.10:6443 --token plw88t.oixwg6yvfro2vmbu \
-            --discovery-token-ca-cert-hash sha256:34632b139fce93d7e4b231a1e4e4efdcc90216ce5d55c255ea43b9236843d1c0
+  kubeadm join 192.168.56.10:6443 --token 0pdoeh.wrqchegv3xm3k1ow \
+    --discovery-token-ca-cert-hash sha256:f4e693bde148f5c0ff03b66fb24c51f948e295775763e8c5c4e60d24ff57fe82
 
-配置 .kube
+1. 配置 .kube
 
 .. code-block:: bash
 
     mkdir -p $HOME/.kube
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+2. 部署pod network方案
+
+去https://kubernetes.io/docs/concepts/cluster-administration/addons/ 选择一个network方案， 根据提供的具体链接去部署。
+
+
+这里我们选择overlay的方案，名字叫 ``flannel`` 部署方法如下：
+
+.. code-block:: bash
+
+  kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+
+3. 检查集群状态
+
+
+
