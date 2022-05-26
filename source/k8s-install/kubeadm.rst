@@ -1,6 +1,8 @@
 kubeadm
 ==============
 
+参考文档 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+
 
 环境准备
 ~~~~~~~~~
@@ -16,15 +18,19 @@ kubeadm
    * - hostname
      - IP
      - system
+     - memory
    * - k8s-master
      - 192.168.56.10
-     - Ubuntu 22.04 LTS
+     - Ubuntu 20.04 LTS
+     - 4GB
    * - k8s-worker1
      - 192.168.56.11
-     - Ubuntu 22.04 LTS
+     - Ubuntu 20.04 LTS
+     - 2GB
    * - k8s-worker2
      - 192.168.56.12
-     - Ubuntu 22.04 LTS
+     - Ubuntu 20.04 LTS
+     - 2GB
 
 
 .. warning::
@@ -253,6 +259,7 @@ shell 自动补全
 
 把修改好的文件保存一个新文件，文件名flannel.yaml，上传到master节点，然后运行
 
+<<<<<<< HEAD
 .. code-block:: bash
 
   $ kubectl apply -f flannel.yaml
@@ -291,6 +298,46 @@ shell 自动补全
 
 .. code-block:: bash
 
+=======
+.. code-block:: bash
+
+  $ kubectl apply -f flannel.yaml
+
+
+检查结果， 如果显示下面的结果，pod都是running的状态，说明我们的network方案部署成功。
+
+.. code-block:: bash
+
+  vagrant@k8s-master:~$ kubectl get pods -A
+  NAMESPACE     NAME                                 READY   STATUS    RESTARTS   AGE
+  kube-system   coredns-6d4b75cb6d-m5vms             1/1     Running   0          3h19m
+  kube-system   coredns-6d4b75cb6d-mmdrx             1/1     Running   0          3h19m
+  kube-system   etcd-k8s-master                      1/1     Running   0          3h19m
+  kube-system   kube-apiserver-k8s-master            1/1     Running   0          3h19m
+  kube-system   kube-controller-manager-k8s-master   1/1     Running   0          3h19m
+  kube-system   kube-flannel-ds-blhqr                1/1     Running   0          3h18m
+  kube-system   kube-proxy-jh4w5                     1/1     Running   0          3h17m
+  kube-system   kube-scheduler-k8s-master            1/1     Running   0          3h19m
+
+
+添加worker节点
+~~~~~~~~~~~~~~~~~
+
+
+添加worker节点非常简单，直接在worker节点上运行join即可，注意--token
+
+
+.. code-block:: bash
+
+  $ sudo kubeadm join 192.168.56.10:6443 --token 0pdoeh.wrqchegv3xm3k1ow \
+    --discovery-token-ca-cert-hash sha256:f4e693bde148f5c0ff03b66fb24c51f948e295775763e8c5c4e60d24ff57fe82
+
+
+最后在master节点查看node和pod结果。(比如我们有两个worker节点)
+
+.. code-block:: bash
+
+>>>>>>> 12ed30716031e97569c911a2df233795cd7b1372
   vagrant@k8s-master:~$ kubectl get nodes
   NAME          STATUS   ROLES           AGE     VERSION
   k8s-master    Ready    control-plane   3h26m   v1.24.0
