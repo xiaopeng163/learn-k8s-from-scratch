@@ -133,10 +133,11 @@ kubeadm
 初始化Kubeadm
 
 - ``--apiserver-advertise-address``  这个地址是本地用于和其他节点通信的IP地址
+- ``--pod-network-cidr``  pod network 地址空间
 
 .. code-block:: bash
 
-    vagrant@k8s-master:~$ sudo kubeadm init --apiserver-advertise-address=192.168.56.10
+    vagrant@k8s-master:~$ sudo kubeadm init --apiserver-advertise-address=192.168.56.10  --pod-network-cidr=10.244.0.0/16
 
 最后一段的输出要保存好, 这一段指出后续需要做什么配置。
 
@@ -175,6 +176,20 @@ kubeadm
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
+检查状态：
+
+.. code-block:: bash
+
+    $ kubectl get nodes
+    $ kubectl get pods -A
+
+shell 自动补全
+
+.. code-block:: bash
+
+    $ source <(kubectl completion bash)
+
+
 2. 部署pod network方案
 
 去https://kubernetes.io/docs/concepts/cluster-administration/addons/ 选择一个network方案， 根据提供的具体链接去部署。
@@ -182,11 +197,127 @@ kubeadm
 
 这里我们选择overlay的方案，名字叫 ``flannel`` 部署方法如下：
 
+下载文件 https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml ，并进行如下修改：
+
+
+确保network是我们配置的 --pod-network-cidr  10.244.0.0/16
+
+.. code-block:: yaml
+
+    net-conf.json: |
+      {
+        "Network": "10.244.0.0/16",
+        "Backend": {
+          "Type": "vxlan"
+        }
+      }
+
+在 kube-flannel的容器args里，确保有iface=enp0s8, 其中enp0s8是我们的--apiserver-advertise-address=192.168.56.10 接口名
+
+.. code-block:: yaml
+
+   - name: kube-flannel
+    #image: flannelcni/flannel:v0.18.0 for ppc64le and mips64le (dockerhub limitations may apply)
+     image: rancher/mirrored-flannelcni-flannel:v0.18.0
+     command:
+     - /opt/bin/flanneld
+     args:
+     - --ip-masq
+     - --kube-subnet-mgr
+     - --iface=enp0s8
+
+
+比如我们的机器，这个IP的接口名是 ``enp0s8``
+
 .. code-block:: bash
 
-  kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+  vagrant@k8s-master:~$ ip a
+  1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+      inet 127.0.0.1/8 scope host lo
+        valid_lft forever preferred_lft forever
+      inet6 ::1/128 scope host
+        valid_lft forever preferred_lft forever
+  2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+      link/ether 02:9a:67:51:1e:b6 brd ff:ff:ff:ff:ff:ff
+      inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic enp0s3
+        valid_lft 85351sec preferred_lft 85351sec
+      inet6 fe80::9a:67ff:fe51:1eb6/64 scope link
+        valid_lft forever preferred_lft forever
+  3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+      link/ether 08:00:27:59:c5:26 brd ff:ff:ff:ff:ff:ff
+      inet 192.168.56.10/24 brd 192.168.56.255 scope global enp0s8
+        valid_lft forever preferred_lft forever
+      inet6 fe80::a00:27ff:fe59:c526/64 scope link
+        valid_lft forever preferred_lft forever
 
-3. 检查集群状态
+把修改好的文件保存一个新文件，文件名flannel.yaml，上传到master节点，然后运行
+
+.. code-block:: bash
+
+  $ kubectl apply -f flannel.yaml
 
 
+检查结果， 如果显示下面的结果，pod都是running的状态，说明我们的network方案部署成功。
 
+.. code-block:: bash
+
+  vagrant@k8s-master:~$ kubectl get pods -A
+  NAMESPACE     NAME                                 READY   STATUS    RESTARTS   AGE
+  kube-system   coredns-6d4b75cb6d-m5vms             1/1     Running   0          3h19m
+  kube-system   coredns-6d4b75cb6d-mmdrx             1/1     Running   0          3h19m
+  kube-system   etcd-k8s-master                      1/1     Running   0          3h19m
+  kube-system   kube-apiserver-k8s-master            1/1     Running   0          3h19m
+  kube-system   kube-controller-manager-k8s-master   1/1     Running   0          3h19m
+  kube-system   kube-flannel-ds-blhqr                1/1     Running   0          3h18m
+  kube-system   kube-proxy-jh4w5                     1/1     Running   0          3h17m
+  kube-system   kube-scheduler-k8s-master            1/1     Running   0          3h19m
+
+
+添加worker节点
+~~~~~~~~~~~~~~~~~
+
+
+添加worker节点非常简单，直接在worker节点上运行join即可，注意--token
+
+
+.. code-block:: bash
+
+  $ sudo kubeadm join 192.168.56.10:6443 --token 0pdoeh.wrqchegv3xm3k1ow \
+    --discovery-token-ca-cert-hash sha256:f4e693bde148f5c0ff03b66fb24c51f948e295775763e8c5c4e60d24ff57fe82
+
+
+最后在master节点查看node和pod结果。(比如我们有两个worker节点)
+
+.. code-block:: bash
+
+  vagrant@k8s-master:~$ kubectl get nodes
+  NAME          STATUS   ROLES           AGE     VERSION
+  k8s-master    Ready    control-plane   3h26m   v1.24.0
+  k8s-worker1   Ready    <none>          3h24m   v1.24.0
+  k8s-worker2   Ready    <none>          3h23m   v1.24.0
+  vagrant@k8s-master:~$
+
+
+pod的话，应该可以看到三个flannel，三个proxy的pod
+
+
+.. code-block:: bash
+
+  vagrant@k8s-master:~$ kubectl get pods -A
+  NAMESPACE     NAME                                 READY   STATUS    RESTARTS   AGE
+  kube-system   coredns-6d4b75cb6d-m5vms             1/1     Running   0          3h19m
+  kube-system   coredns-6d4b75cb6d-mmdrx             1/1     Running   0          3h19m
+  kube-system   etcd-k8s-master                      1/1     Running   0          3h19m
+  kube-system   kube-apiserver-k8s-master            1/1     Running   0          3h19m
+  kube-system   kube-controller-manager-k8s-master   1/1     Running   0          3h19m
+  kube-system   kube-flannel-ds-blhqr                1/1     Running   0          3h18m
+  kube-system   kube-flannel-ds-lsbg5                1/1     Running   0          3h16m
+  kube-system   kube-flannel-ds-s7jtf                1/1     Running   0          3h17m
+  kube-system   kube-proxy-jh4w5                     1/1     Running   0          3h17m
+  kube-system   kube-proxy-mttvg                     1/1     Running   0          3h19m
+  kube-system   kube-proxy-v4qxp                     1/1     Running   0          3h16m
+  kube-system   kube-scheduler-k8s-master            1/1     Running   0          3h19m
+
+
+至此我们的三节点集群搭建完成。
