@@ -32,7 +32,8 @@ boxes = [
 
 Vagrant.configure(2) do |config|
 
-  config.vm.box = "ubuntu/jammy64"
+  # config.vm.box = "ubuntu/jammy64"
+  config.vm.box = "ubuntu/focal64"  #ubuntu 20.04
   boxes.each do |opts|
       config.vm.define opts[:name] do |config|
         config.vm.hostname = opts[:name]
