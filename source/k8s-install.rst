@@ -26,3 +26,4 @@ Kubernetes的集群搭建方法有很多种，其中最常见的有：
 
     k8s-install/minikube
     k8s-install/kubeadm
+    k8s-install/verify
