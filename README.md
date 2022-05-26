@@ -1,1 +1,1 @@
-# learn-k8s-from-scratch
+# learn-k8s-from-scratch (未完成，正在编写中)
