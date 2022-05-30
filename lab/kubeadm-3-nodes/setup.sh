@@ -39,9 +39,3 @@ echo "[TASK 7] Install Kubernetes components (kubeadm, kubelet and kubectl)"
 apt install -qq -y kubeadm=1.24.0-00 kubelet=1.24.0-00 kubectl=1.24.0-00 >/dev/null 2>&1
 
 #https://blog.sighup.io/how-to-run-kubernetes-without-docker/
-
-#/run/flannel/subnet.env
-# FLANNEL_NETWORK=10.244.0.0/16
-# FLANNEL_SUBNET=10.244.0.1/24
-# FLANNEL_MTU=1450
-# FLANNEL_IPMASQ=true
