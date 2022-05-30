@@ -35,7 +35,8 @@ Learn Kubernetes from Scratch
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
+
+   introduction
    k8s-install
    k8s-core-concept
    scheduling
