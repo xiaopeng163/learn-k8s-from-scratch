@@ -37,3 +37,21 @@ Create a pod named web with image of nginx:latest
 
 
 2. from yaml file
+
+以下yaml文件是定义一个pod所需的最少字段 (nginx.yml)
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: web
+   spec:
+   containers:
+     - name: nginx-container
+       image: nginx:latest
+
+.. code-block:: bash
+
+   $ kubectl create -f nginx.yml
+   pod/web created
