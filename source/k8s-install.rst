@@ -17,10 +17,6 @@ Kubernetes的集群搭建方法有很多种，其中最常见的有：
 - Perform a version upgrade on a Kubernetes cluster using Kubeadm
 
 
-
-主要内容
-~~~~~~~~~~
-
 .. toctree::
     :maxdepth: 1
 
