@@ -45,6 +45,7 @@ Learn Kubernetes from Scratch
    networking
    security
    practice
+   exam
 
 
 
