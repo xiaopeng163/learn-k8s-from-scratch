@@ -55,7 +55,7 @@ Create a pod named web with image of nginx:latest
      name: web
    spec:
       containers:
-      - name: nginx-container
+       - name: nginx-container
          image: nginx:latest
 
 .. code-block:: bash
@@ -74,12 +74,12 @@ Create a pod named web with image of nginx:latest
       name: client
    spec:
       containers:
-      - name: client
-      image: busybox
-      command:
-         - sh
-         - -c
-         - "sleep 1000000"
+       - name: client
+         image: busybox
+         command:
+          - sh
+          - -c
+          - "sleep 1000000"
 
 
 
@@ -107,7 +107,7 @@ Create a pod named web with image of nginx:latest
 .. code-block:: bash
 
    $ kubectl create -f my-pod.yml
-   $ kubectl get pod 
+   $ kubectl get pod
    NAME     READY   STATUS    RESTARTS   AGE
    my-pod   2/2     Running   0          35s
 
@@ -131,6 +131,12 @@ Pod的基本操作
    client   1/1     Running   0          5m17s   10.244.2.4   k8s-worker2   <none>           <none>
    web      1/1     Running   0          15m     10.244.1.2   k8s-worker1   <none>           <none>
 
+通过 ``-o yaml`` 可以获取到具体一个pod的yaml定义文件
+
+.. code-block:: bash
+
+   $ kubectl get pods client -o yaml
+
 
 删除Pod
 ~~~~~~~~~~~
@@ -148,3 +154,53 @@ Pod的基本操作
 
    $ kubectl describe pod my-pod
 
+
+进入容器执行命令
+-------------------
+
+对于只有单个容器的Pod， 执行date命令
+
+.. code-block:: bash
+
+   vagrant@k8s-master:~$ kubectl get pods
+   NAME     READY   STATUS    RESTARTS   AGE
+   client   1/1     Running   0          38s
+   my-pod   2/2     Running   0          6s
+   vagrant@k8s-master:~$ kubectl exec client -- date
+   Wed Jun  1 21:57:07 UTC 2022
+
+进入交互式shell
+
+.. code-block:: bash
+
+   vagrant@k8s-master:~$ kubectl exec client -- date
+   Wed Jun  1 21:57:07 UTC 2022
+   vagrant@k8s-master:~$ kubectl exec client -it -- sh
+   / #
+   / # ip a
+   1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+      link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+      inet 127.0.0.1/8 scope host lo
+         valid_lft forever preferred_lft forever
+      inet6 ::1/128 scope host
+         valid_lft forever preferred_lft forever
+   3: eth0@if7: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1450 qdisc noqueue
+      link/ether a6:56:08:ba:34:28 brd ff:ff:ff:ff:ff:ff
+      inet 10.244.1.3/24 brd 10.244.1.255 scope global eth0
+         valid_lft forever preferred_lft forever
+      inet6 fe80::a456:8ff:feba:3428/64 scope link
+         valid_lft forever preferred_lft forever
+   / #
+
+对于具有多个容器的pod，需要通过 ``-c`` 指定要进入那个容器中。
+
+.. code-block:: bash
+
+   vagrant@k8s-master:~$ kubectl get pods
+   NAME     READY   STATUS    RESTARTS   AGE
+   client   1/1     Running   0          3m16s
+   my-pod   2/2     Running   0          2m44s
+   vagrant@k8s-master:~$ kubectl exec my-pod -c
+   client  nginx
+   vagrant@k8s-master:~$ kubectl exec my-pod -c nginx -- date
+   Wed Jun  1 21:59:58 UTC 2022
