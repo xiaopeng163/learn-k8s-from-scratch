@@ -17,8 +17,13 @@ Kubernetes的集群搭建方法有很多种，其中最常见的有：
 - Perform a version upgrade on a Kubernetes cluster using Kubeadm
 
 
+.. note::
+
+    有些朋友可能听说过 https://labs.play-with-k8s.com/ 这个免费的在线k8s环境，个人并不推荐，速度非常慢，而且经常会因为资源问题卡死。
+
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
+    :caption: Contents:
 
     k8s-install/minikube
     k8s-install/kubeadm
