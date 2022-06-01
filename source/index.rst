@@ -10,7 +10,7 @@ Learn Kubernetes from Scratch
 
    本课程的目的是帮助大家快速入门Kubernetes，并通过Certified Kubernetes Administrator (CKA)的认证考试。
 
-   目前课程基于的版本是Kubernetes v1.24
+   目前课程基于的版本是Kubernetes v1.24.x
 
 .. note::
 
@@ -18,9 +18,12 @@ Learn Kubernetes from Scratch
 
    也欢迎大家关注我的微信公众号，会不定期分享一些Docker/k8s的技术文章
 
+   其他联系方式： `GitHub <https://github.com/xiaopeng163>`_, `Twitter <https://twitter.com/xiaopeng163>`_, `YouTube <https://www.youtube.com/channel/UCmjdhwMGSut8mZ1CqnRjjUw>`_
+
 .. image:: _static/wechat.jpg
    :width: 400
    :alt: wechat
+
 
 .. note::
 

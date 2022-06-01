@@ -10,8 +10,17 @@ Container Orchestration
 .. image:: _static/introduction/container-orchestration.PNG
    :alt: container-orchestration
 
+
+k8s?
+-------
+
+
 Kubernetes is an open-source container orchestration system for automating software deployment, scaling, and management.
 Google originally designed Kubernetes, but the Cloud Native Computing Foundation now maintains the project. - Wikipedia
+
+
+By the way, if you’re wondering where the name “Kubernetes” came from, it is a Greek word, meaning helmsman or pilot. The abbreviation K8s is derived by replacing the eight letters of “ubernete” with the digit 8.
+
 
 
 Kubernetes Architecture

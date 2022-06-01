@@ -3,7 +3,8 @@ Kubernetes Core Concepts
 
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
+    :caption: Contents:
 
     k8s-core-concept/node
     k8s-core-concept/pod

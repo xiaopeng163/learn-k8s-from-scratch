@@ -82,11 +82,42 @@ Create a pod named web with image of nginx:latest
          - "sleep 1000000"
 
 
+
+一个pod是可以包含多个container的，如果要创建这样的pod，那么只能通过yaml文件实现，例如：
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+      name: my-pod
+   spec:
+      containers:
+       - name: nginx
+         image: nginx
+       - name: client
+         image: busybox
+         command:
+          - sh
+          - -c
+          - "sleep 1000000"
+
+
+
+.. code-block:: bash
+
+   $ kubectl create -f my-pod.yml
+   $ kubectl get pod 
+   NAME     READY   STATUS    RESTARTS   AGE
+   my-pod   2/2     Running   0          35s
+
+
 Pod的基本操作
 ---------------
 
 
 获取pod列表
+~~~~~~~~~~~~~~~~~
 
 
 .. code-block:: bash
@@ -102,4 +133,18 @@ Pod的基本操作
 
 
 删除Pod
+~~~~~~~~~~~
+
+.. code-block:: bash
+
+   $ kubectl delete pod web
+   pod "web" deleted
+
+
+获取pod详细信息
+~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+   $ kubectl describe pod my-pod
 
