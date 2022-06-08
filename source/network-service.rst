@@ -1,2 +1,0 @@
-Network Service and ingress
-===============================

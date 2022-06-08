@@ -43,9 +43,11 @@ Learn Kubernetes from Scratch
    k8s-install
    api-server-pod
    controller-deployment
-   stroage-scheduling
-   network-service
+   stroage
+   scheduling
+   network
    security
+   logging-monitoring
    troubleshooting
    practice
    exam
