@@ -25,14 +25,14 @@ Learn Kubernetes from Scratch
    :alt: wechat
 
 
-.. note::
+.. .. note::
 
-   请大家支持正版，请大家支持正版，请大家支持正版。大家的支持才是我录制和更新课程的动力
-   有购买了盗版或者白嫖的同学，如果过意不去也可以给我打赏，金额随意
+..    请大家支持正版，请大家支持正版，请大家支持正版。大家的支持才是我录制和更新课程的动力
+..    有购买了盗版或者白嫖的同学，如果过意不去也可以给我打赏，金额随意
 
-.. image:: _static/wechat-tips.jpg
-   :width: 250
-   :alt: wechat-tips
+.. .. image:: _static/wechat-tips.jpg
+..    :width: 250
+..    :alt: wechat-tips
 
 
 .. toctree::
@@ -41,15 +41,14 @@ Learn Kubernetes from Scratch
 
    introduction
    k8s-install
-   k8s-core-concept
-   scheduling
-   logging-monitoring
-   storage
-   networking
+   api-server-pod
+   controller-deployment
+   stroage-scheduling
+   network-service
    security
+   troubleshooting
    practice
    exam
-
 
 
 
