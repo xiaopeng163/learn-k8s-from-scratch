@@ -7,4 +7,5 @@ API Server and Pod
    :caption: Contents:
 
    api-server-pod/api-server
+   api-server-pod/pod
    api-server-pod/node
