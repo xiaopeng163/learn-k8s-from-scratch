@@ -25,7 +25,8 @@ Pod是k8s里最小的调度单位。
 How to create a pod?
 -------------------------
 
-1. from ``kubectl run`` command
+Imperative
+~~~~~~~~~~~~~
 
 Create a pod named web with image of nginx:latest
 
@@ -41,7 +42,8 @@ Create a pod named web with image of nginx:latest
    $ kubectl run client --image=busybox --command -- bin/sh -c "sleep 100000"
 
 
-1. from yaml file
+Declarative
+~~~~~~~~~~~~~
 
 以下yaml文件是定义一个pod所需的最少字段 (nginx.yml)
 
@@ -58,7 +60,7 @@ Create a pod named web with image of nginx:latest
 
 .. code-block:: bash
 
-   $ kubectl create -f nginx.yml
+   $ kubectl apply -f nginx.yml
    pod/web created
 
 
@@ -79,9 +81,79 @@ Create a pod named web with image of nginx:latest
           - -c
           - "sleep 1000000"
 
-Pod的基本操作
+multi-container pod
+-----------------------------
+
+一个pod是可以包含多个container的，如果要创建这样的pod，那么只能通过yaml文件实现，例如：
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+      name: my-pod
+   spec:
+      containers:
+       - name: nginx
+         image: nginx
+       - name: client
+         image: busybox
+         command:
+          - sh
+          - -c
+          - "sleep 1000000"
+
+
+
+.. code-block:: bash
+
+   $ kubectl create -f my-pod.yml
+   $ kubectl get pod
+   NAME     READY   STATUS    RESTARTS   AGE
+   my-pod   2/2     Running   0          35s
+
+
+Pod YAML 语法
 ---------------
 
+查文档 kubernetes.io, 命令行帮助
+
+.. code-block:: bash
+
+   kubectl explain pods | more
+   kubectl explain pod.spec | more
+   kubectl explain pod.spec.containers | more
+
+kubectl dry-run
+------------------
+
+
+Server-side
+~~~~~~~~~~~~~~~~
+
+和正常情况一样处理客户端发送过来的请求，但是并不会把Object状态持久化存储到storage中
+
+
+.. code-block:: bash
+
+   $ kubectl apply -f nginx.yml --dry-run=server
+
+Client-side
+~~~~~~~~~~~~~~~~
+
+- 把要操作的Object通过标准输出stdout输出到terminal
+- 验证manifest的语法
+- 可以用于生成语法正确的Yaml manifest
+
+.. code-block:: bash
+
+   $ kubectl apply -f nginx.yml --dry-run=client
+   $ kubectl run web --image=nginx --dry-run=client -o yaml
+   $ kubectl run web --image=nginx --dry-run=client -o yaml > nginx.yml
+
+
+Pod的基本操作
+---------------
 
 获取pod列表
 ~~~~~~~~~~~~~~~~~
@@ -186,41 +258,7 @@ static pod
 sudo cat /var/lib/kubelet/config.yaml
 
 
-static pod in /etc/kubernetes/manifests/ 
-
-
-multi-container pod
------------------------------
-
-一个pod是可以包含多个container的，如果要创建这样的pod，那么只能通过yaml文件实现，例如：
-
-.. code-block:: yaml
-
-   apiVersion: v1
-   kind: Pod
-   metadata:
-      name: my-pod
-   spec:
-      containers:
-       - name: nginx
-         image: nginx
-       - name: client
-         image: busybox
-         command:
-          - sh
-          - -c
-          - "sleep 1000000"
-
-
-
-.. code-block:: bash
-
-   $ kubectl create -f my-pod.yml
-   $ kubectl get pod
-   NAME     READY   STATUS    RESTARTS   AGE
-   my-pod   2/2     Running   0          35s
-
-
+static pod in /etc/kubernetes/manifests/
 
 
 Pod with init containers
