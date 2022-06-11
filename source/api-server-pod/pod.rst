@@ -151,6 +151,16 @@ Client-side
    $ kubectl run web --image=nginx --dry-run=client -o yaml
    $ kubectl run web --image=nginx --dry-run=client -o yaml > nginx.yml
 
+kubectl diff
+----------------
+
+显示当前要部署的manifest和集群中运行的有和不同，这样就知道如果apply会发生什么。
+
+.. code-block:: bash
+
+   $ kubectl diff -f new-nginx.yml
+
+
 
 Pod的基本操作
 ---------------
