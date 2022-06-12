@@ -255,10 +255,23 @@ Pod的基本操作
    Wed Jun  1 21:59:58 UTC 2022
 
 
+API level log
+-----------------
 
-$ kubectl get events --watch
-$ kubectl apply -f pod.yml
+通过 ``-v`` 可以获取到每一个kubectl命令在API level的log，例如
 
+获取kubectl操作更详细的log, API level（ 通过 -v 指定）
+
+.. code-block:: bash
+
+   $ kubectl get pod <pod-name> -v 6   # 或者 7,8,9 不同的level，数值越大，得到的信息越详细
+
+
+``--watch`` 持续监听kubectl操作，API level
+
+.. code-block:: bash
+
+   $ kubectl get pods <pod-name> --watch -v 6
 
 
 static pod
