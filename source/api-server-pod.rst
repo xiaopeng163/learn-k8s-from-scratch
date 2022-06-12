@@ -8,4 +8,6 @@ API Server and Pod
 
    api-server-pod/api-server
    api-server-pod/pod
+   api-server-pod/kubectl-proxy
+   api-server-pod/namespace
    api-server-pod/node
