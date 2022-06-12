@@ -53,8 +53,8 @@ kubectl explain pod.spec.containers | more
 
 kubectl get pod hello-world -v 6  (7,8,9)
 
-kubectl proxy & 
-then 
+kubectl proxy &
+then
 
 curl http://127.0.0.1:8001/api/xxxxxxxx | head -n 20
 
@@ -62,14 +62,26 @@ curl http://127.0.0.1:8001/api/xxxxxxxx | head -n 20
 how to kill the proxy?    fg and ctrl + c
 
 
+vagrant@k8s-master:~$ kubectl get pods -v 6
+I0612 15:12:37.373428   34615 loader.go:372] Config loaded from file:  /home/vagrant/.kube/config
+I0612 15:12:37.400727   34615 round_trippers.go:553] GET https://192.168.56.10:6443/api/v1/namespaces/default/pods?limit=500 200 OK in 14 milliseconds
+NAME   READY   STATUS    RESTARTS   AGE
+web    2/2     Running   0          3h44m
+
+
+curl http://127.0.0.1:8001/api/v1/namespaces/default/pods?limit=500
+
+
+
+
 # watch
 
-kubectl get pods --watch -v 6 
+kubectl get pods --watch -v 6
 
 kubectl delete pods hello-world
 
 kubectl apply -f pod.yml
 
 kubectl logs <pod name>
- 
+
 kubectl logs <pod name> -v 6
