@@ -274,15 +274,6 @@ API level log
    $ kubectl get pods <pod-name> --watch -v 6
 
 
-static pod
-----------------
-
-
-sudo cat /var/lib/kubelet/config.yaml
-
-
-static pod in /etc/kubernetes/manifests/
-
 
 Pod with init containers
 ---------------------------
@@ -304,7 +295,6 @@ Pod with init containers
     containers:
     - name: app-container
       image: nginx
-        image: busybox
 
 
 

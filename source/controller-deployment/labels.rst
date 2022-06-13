@@ -48,4 +48,4 @@ Controllers and Services match pods using Selectors
 Pod Scheduling
 
 - select node
-- 
+-
