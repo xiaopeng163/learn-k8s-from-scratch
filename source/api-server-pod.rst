@@ -12,4 +12,5 @@ API Server and Pod
    api-server-pod/namespace
    api-server-pod/static-pod
    api-server-pod/init-container
+   api-server-pod/pod-lifecycle
    api-server-pod/node
