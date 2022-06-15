@@ -6,4 +6,5 @@ Controller and Deployment
    :maxdepth: 2
    :caption: Contents:
 
+   controller-deployment/controller-manager
    controller-deployment/labels
