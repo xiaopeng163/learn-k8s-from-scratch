@@ -3,6 +3,9 @@ Controller Manager
 
 https://kubernetes.io/docs/concepts/architecture/controller/
 
+A controller tracks at least one Kubernetes resource type. These objects have a spec field that represents the ``desired state``.
+The controller(s) for that resource are responsible for making the current state come closer to that desired state.
+
 
 - kube controller Manager
 - cloud controller Manager
