@@ -46,6 +46,26 @@ Declaratively
             name: nginx
 
 
+ReplicaSets and Failures
+----------------------------
+
+Pod Failures
+~~~~~~~~~~~~~~~~~~
+
+Rescheduled and a new Pod is created
+
+
+Node Failures
+~~~~~~~~~~~~~~~~~~~
+
+- Transient failure
+- permanent failure
+
+kube-contorller-manager 有一个timeout的设置
+
+pod-eviction-timeout （默认5min） Node如果失联超过5分钟，就会触发在其上运行的Pod的终止和重建。
+
+
 Update Deployment
 ----------------------
 
