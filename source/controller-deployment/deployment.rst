@@ -88,7 +88,7 @@ Update image
 
 .. code-block:: bash
 
-  $ kubectl set image deployment web nginx=nginx:1.14.2
+  $ kubectl set image deployment/web nginx=nginx:1.14.2
 
 
 Rolling Back
