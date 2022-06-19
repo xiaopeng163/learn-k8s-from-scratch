@@ -7,5 +7,6 @@ Controller and Deployment
    :caption: Contents:
 
    controller-deployment/controller-manager
-   controller-deployment/deployment
    controller-deployment/labels
+   controller-deployment/deployment
+   controller-deployment/daemonset
