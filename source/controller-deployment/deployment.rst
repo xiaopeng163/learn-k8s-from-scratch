@@ -69,6 +69,67 @@ pod-eviction-timeout （默认5min） Node如果失联超过5分钟，就会触�
 Update Deployment
 ----------------------
 
+Update Strategy
+~~~~~~~~~~~~~~~~~~~
+
+https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+
+``RollingUpdate`` (Default)
+
+A new ReplicaSet starts scaling up and the old ReplicaSet starts scaling down
+
+创建一个deployment
+
+.. code-block:: bash
+
+  $ kubectl create deployment web --image=nginx:1.14 --replicas 3
+
+Update image
+
+.. code-block:: bash
+
+  $ kubectl set image deployment web nginx=nginx:1.14.2
+
+
+Rolling Back
+
+查看rollout history
+
+.. code-block:: bash
+
+  $ kubectl rollout history deployment web
+
+查看revision history
+
+.. code-block:: bash
+
+  $ kubectl rollout history deployment web --revision=1
+
+rollout
+
+.. code-block:: bash
+
+  $ kubectl rollout undo deployment web --to-revision=1
+
+``Recreate``
+
+Terminates all pods in the current ReplicaSet, set prior to scaling up the new ReplicaSet
+
+(used when applications  don't support running different versions concurrently)
+
+
+
+Restarting a Deployment
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+  $ kubectl rollout restart deployment hello-world
+
 
 Scale Deployment
 ----------------------
+
+.. code-block:: bash
+
+  $ kubectl scale deployment web --replicas 5
