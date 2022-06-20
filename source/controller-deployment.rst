@@ -10,3 +10,4 @@ Controller and Deployment
    controller-deployment/labels
    controller-deployment/deployment
    controller-deployment/daemonset
+   controller-deployment/job
