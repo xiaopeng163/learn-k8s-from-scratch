@@ -26,6 +26,7 @@ sysctl --system >/dev/null 2>&1
 echo "[TASK 5] Install containerd runtime"
 apt update -qq >/dev/null 2>&1
 apt install -qq -y containerd apt-transport-https >/dev/null 2>&1
+apt install -qq -y nfs-common >/dev/null 2>&1
 mkdir /etc/containerd
 containerd config default >/etc/containerd/config.toml
 systemctl restart containerd
