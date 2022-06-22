@@ -11,10 +11,10 @@ NFS server setup
     # install NFS server and create directory for our exports
 
     sudo apt-get install -y nfs-kernel-server
-    sudo mkdir /export/volumes
-    sudo mkdir /export/volumes/pod
+    sudo mkdir -p /export/volumes
+    sudo mkdir -p /export/volumes/pod
 
-    # config NFS export 
+    # config NFS export
 
     sudo bash -c 'echo "/export/volumes *(rw,no_root_squash,no_subtree_check)" > /etc/exports'
     cat /etc/exports
@@ -33,6 +33,6 @@ install NFS client
 
 .. code-block:: bash
 
-    $ sudo mount -t nfs4 username@nfs-server-address:/export/volumes /mnt/
+    $ sudo mount -t nfs nfs-server-address:/export/volumes /mnt/
     $ mount | grep nfs
     $ sudo umount /mnt
