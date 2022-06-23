@@ -8,7 +8,7 @@ Taints
 
 Node affinity 使得pod有选择node的能力.
 
-Taints 正好相反-- 它运行Node排斥特定的Pod。也就是用在node上的。
+Taints 正好相反-- 它允许Node排斥特定的Pod。也就是用在node上的。
 
 Tolerations
 --------------
@@ -25,6 +25,41 @@ Demo
 
 .. code-block:: bash
 
-    $ kubectl taint nodes node1 key1=value1:NoSchedule   # to add
-    $ kubectl taint nodes node1 key1=value1:NoSchedule-  # to delete
+    $ kubectl taint nodes k8s-worker1 key1=value1:NoSchedule   # to add
+    $ kubectl taint nodes k8s-worker1 key1=value1:NoSchedule-  # to delete
 
+
+create a deployment with replica=3 (no pod will be scheduled on k8s-worker1)
+
+.. code-block:: bash
+
+    $ kubectl taint nodes k8s-worker1 color=red:NoSchedule
+    $ kubectl create deployment web --image=nginx --replicas=3
+
+
+add Tolerations
+
+.. code-block::  yaml
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: web
+    spec:
+      replicas: 3
+      selector:
+        matchLabels:
+          app: web
+      template:
+        metadata:
+          labels:
+            app: web
+        spec:
+          containers:
+          - image: nginx
+            name: nginx
+          tolerations:
+          - key: "color"
+            operator: "Equal"
+            value: "red"
+            effect: "NoSchedule"
