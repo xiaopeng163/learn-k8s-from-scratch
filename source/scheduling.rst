@@ -14,11 +14,14 @@ Scheduling 就是找到一个合适的node去运行pod的过程，这个寻找�
 - 被选节点的kubelet通过监控api-server得知自己被选择创建一个pod
 - kubelet驱动container runtime创建container并启动
 
+https://www.alibabacloud.com/blog/getting-started-with-kubernetes-%7C-scheduling-process-and-scheduler-algorithms_596299
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   scheduling/overview
-   scheduling/node
-   scheduling/schedule-pod-to-node
+   scheduling/node-selector
+   scheduling/affinity
+   scheduling/taints
+   scheduling/cordoning

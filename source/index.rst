@@ -43,8 +43,8 @@ Learn Kubernetes from Scratch(未完成，正在编写中)
    k8s-install
    api-server-pod
    controller-deployment
-   stroage
    scheduling
+   stroage
    network
    security
    logging-monitoring
