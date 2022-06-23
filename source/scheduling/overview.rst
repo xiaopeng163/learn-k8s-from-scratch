@@ -1,5 +1,5 @@
-Scheduling
-==============
+Overview
+===========
 
 Scheduling 就是找到一个合适的node去运行pod的过程，这个寻找主要是通过 ``kube-scheduler`` 实现的.
 
@@ -13,12 +13,3 @@ Scheduling 就是找到一个合适的node去运行pod的过程，这个寻找�
 - 更新pod的信息，包括在哪个node上
 - 被选节点的kubelet通过监控api-server得知自己被选择创建一个pod
 - kubelet驱动container runtime创建container并启动
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   scheduling/overview
-   scheduling/node
-   scheduling/schedule-pod-to-node
