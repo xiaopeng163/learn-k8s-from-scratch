@@ -1,5 +1,5 @@
-Persistent Volumes
-=====================
+Persistent Volumes and Persistent Volumes Claims
+====================================================
 
 
 Type of Persistent Volumes
@@ -23,6 +23,7 @@ Type of Persistent Volumes
 
 
 Persistent Volumes Claims
+----------------------------
 
 A request for storage by a user
 

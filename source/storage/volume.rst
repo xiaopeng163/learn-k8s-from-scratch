@@ -26,7 +26,7 @@ though that volume can be mounted at the same or different paths in each contain
       containers:
       - name: producer
         image: busybox
-        command: ["sh", "-c", "while ture; do echo $(hostname) $(date) >> /var/log/index.html; sleep 10; done"]
+        command: ["sh", "-c", "while true; do echo $(hostname) $(date) >> /var/log/index.html; sleep 10; done"]
         volumeMounts:
         - name: webcontent
           mountPath: /var/log
@@ -45,27 +45,35 @@ though that volume can be mounted at the same or different paths in each contain
 hostPath
 ---------------
 
+https://kubernetes.io/docs/concepts/storage/volumes/#hostpath
+
 A hostPath volume mounts a file or directory from the host node's filesystem into your Pod.
 This is not something that most Pods will need, but it offers a powerful escape hatch for some applications.
 
 
 .. code-block:: yaml
 
-  apiVersion: v1
-  kind: Pod
-  metadata:
-    name: test-pd
-  spec:
-    containers:
-    - image: busybox
-      name: busybox
-      command: ["sh", "-c", "while true; do date>/tmp/time.txt; sleep 10; done"]
-      volumeMounts:
-      - mountPath: /tmp        name: test-volume
-    volumes:
-    - name: test-volume
-      hostPath:
-        # directory location on host
-        path: /data
-        # this field is optional
-        type: Directory
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: multicontainer-pod
+      spec:
+        containers:
+        - name: producer
+          image: busybox
+          command: ["sh", "-c", "while true; do echo $(hostname) $(date) >> /var/log/index.html; sleep 10; done"]
+          volumeMounts:
+          - name: webcontent
+            mountPath: /var/log
+        - name: consumer
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+          - name: webcontent
+            mountPath: /user/share/nginx/html
+        volumes:
+        - name: webcontent
+          hostPath:
+            path: /tmp
+            type: Directory

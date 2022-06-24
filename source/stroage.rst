@@ -14,5 +14,6 @@ Storage API Objects
    :maxdepth: 2
    :caption: Contents:
 
-   storage/nfs
    storage/volume
+   storage/pv-pvc
+   storage/nfs
