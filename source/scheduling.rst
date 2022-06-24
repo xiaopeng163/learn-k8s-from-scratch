@@ -25,3 +25,4 @@ https://www.alibabacloud.com/blog/getting-started-with-kubernetes-%7C-scheduling
    scheduling/affinity
    scheduling/taints
    scheduling/cordoning
+   scheduling/manual-pod
