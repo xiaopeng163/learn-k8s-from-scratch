@@ -2,10 +2,9 @@ Storage
 ==========
 
 Storage API Objects
-----------------------
 
-- volume
-- Persistent volume
+- Volume
+- Persistent Volume
 - Persistent Volume Claim
 - Storage Class
 
@@ -15,5 +14,9 @@ Storage API Objects
    :caption: Contents:
 
    storage/volume
-   storage/pv-pvc
    storage/nfs
+   storage/pv-pvc
+   storage/env
+   storage/secrets
+   storage/configmap
+

@@ -65,3 +65,12 @@ kubeadm集群验证
     </body>
     </html>
     vagrant@k8s-master:~$
+
+
+环境清理
+-----------
+
+.. code-block:: bash
+
+    $ kubectl delete service web
+    $ kubectl delete pod web
