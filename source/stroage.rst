@@ -1,6 +1,10 @@
 Storage
 ==========
 
+.. note::
+
+   学习本章之前，最好对Docker的Volume有一定的了解 https://dockertips.readthedocs.io/en/latest/docker-volume.html
+
 Storage API Objects
 
 - Volume
@@ -8,6 +12,11 @@ Storage API Objects
 - Persistent Volume Claim
 - Storage Class
 
+Configuration
+
+- Environment Variables
+- Secrets
+- ConfigMap
 
 .. toctree::
    :maxdepth: 2
