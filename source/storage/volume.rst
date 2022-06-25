@@ -1,6 +1,8 @@
 Volumes
 =====================
 
+https://kubernetes.io/docs/concepts/storage/volumes/
+
 Kubernetes中的Volume基本延续了Docker中Volume的概念。 Kubernetes 将 Volume 分为持久化的 PersistentVolume 和非持久化的普通 Volume 两类。
 
 - 普通的volume只是为了一个Pod中的多个container之间可以共享数据，它具有和pod相同的生命周期，所以本质上不具有持久化的功能
