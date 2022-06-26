@@ -1,6 +1,32 @@
 NFS Server setup
 =========================
 
+
+.. list-table:: Kubeadm环境主机(+ NFS Server)
+   :header-rows: 1
+
+   * - hostname
+     - IP
+     - system
+     - memory
+   * - k8s-master
+     - 192.168.56.10
+     - Ubuntu 20.04 LTS
+     - 4GB
+   * - k8s-worker1
+     - 192.168.56.11
+     - Ubuntu 20.04 LTS
+     - 2GB
+   * - k8s-worker2
+     - 192.168.56.12
+     - Ubuntu 20.04 LTS
+     - 2GB
+   * - nfs-server
+     - 192.168.56.20
+     - Ubuntu 20.04 LTS
+     - 2GB
+
+
 以Ubuntu为例
 
 NFS server setup
@@ -25,6 +51,10 @@ NFS client test
 -------------------
 
 install NFS client
+
+.. warning::
+
+    注意，需要在Kubernetes集群的所有节点上安装NFS Client
 
 .. code-block:: bash
 
