@@ -92,12 +92,72 @@ Environment Variables
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 
+.. code-block:: yaml
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+                name: mysql-secret
+                key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+                name: mysql-secret
+                key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+                name: mysql-secret
+                key: MYSQL_PASSWORD
+
+or
+
+.. code-block:: yaml
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0
+        envFrom:
+        - secretRef:
+            name: mysql-secret
 
 
 Volumes or Files
 ~~~~~~~~~~~~~~~~~~
 
 
+.. code-block:: yaml
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: pod-env
+    spec:
+      volumes:
+      - name: appconfig
+        secret:
+          secretName: mysql-secret
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["sh", "-c", "while true; do echo $(date) >> /tmp/index.html; sleep 10; done"]
+        volumeMounts:
+        - name: appconfig
+          mountPath: "/etc/appconfig"
 
 type of Secrets
 ------------------
