@@ -4,10 +4,10 @@ Networking
 https://kubernetes.io/docs/concepts/cluster-administration/networking/
 
 
-- Highly-coupled container-to-container communications: this is solved by Pods and localhost communications.
-- Pod-to-Pod communications: this is the primary focus of this document.
-- Pod-to-Service communications: this is covered by services.
-- External-to-Service communications: this is covered by services.
+- container-to-container communications
+- Pod-to-Pod communications
+- Pod-to-Service communications
+- External-to-Service communications
 
 
 Kubernetes Networking Model
