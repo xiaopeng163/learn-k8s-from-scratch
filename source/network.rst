@@ -3,6 +3,7 @@ Networking
 
 https://kubernetes.io/docs/concepts/cluster-administration/networking/
 
+https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-networking-guide-beginners.html
 
 - container-to-container communications
 - Pod-to-Pod communications
