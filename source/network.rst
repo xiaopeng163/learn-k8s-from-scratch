@@ -9,6 +9,10 @@ https://kubernetes.io/docs/concepts/cluster-administration/networking/
 - Pod-to-Service communications
 - External-to-Service communications
 
+.. image:: _static/network/networking-overview.png
+   :width: 800
+   :alt: k8s-network
+
 
 Kubernetes Networking Model
 
