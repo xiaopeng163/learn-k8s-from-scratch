@@ -18,6 +18,13 @@ Basic
 
     $ sudo apt install bridge-utils net-tools
 
+
+
+.. image:: ../_static/network/pod-network.PNG
+   :alt: pod-network
+
+
+
 Container to Container in Pod
 --------------------------------
 
@@ -90,3 +97,11 @@ Pod to Pod (multi-Node)
       - name: pod2
         image: xiaopeng163/net-box
         command: ["sh", "-c", "while true; do echo $(date) >> /tmp/index.html; sleep 60; done"]
+
+
+References
+-------------------
+
+https://kubernetes.io/docs/concepts/cluster-administration/networking/
+
+https://medium.com/@anilkreddyr/kubernetes-with-flannel-understanding-the-networking-part-2-78b53e5364c7
