@@ -105,10 +105,62 @@ How it works (deep dive)
     KUBE-SEP-QWI4LEXVO5GRYADO  all                        --   0.0.0.0/0       0.0.0.0/0       /*  default/hello-world  ->       10.244.2.190:8080  */
 
 
+cleanup and delete the service
+
 NodePort
 ~~~~~~~~~~~
 
 This makes the service accessible on a static port on each Node in the cluster.
+
+.. code-block:: bash
+
+    $ kubectl expose deployment hello-world  --target-port=8080 --type=NodePort
+    service/hello-world exposed
+    $ kubectl get svc
+    NAME          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+    hello-world   NodePort    10.111.34.177   <none>        8080:30583/TCP   5s
+    kubernetes    ClusterIP   10.96.0.1       <none>        443/TCP          36d
+
+    $ curl 127.0.0.1:30583
+    Hello, world!
+    Version: 1.0.0
+    Hostname: hello-world-7c649d8c6f-pqbdt
+
+
+iptables rules
+
+.. code-block:: bash
+
+    $ sudo iptables -t nat -L PREROUTING | column -t
+    Chain          PREROUTING  (policy  ACCEPT)
+    target         prot        opt      source    destination
+    KUBE-SERVICES  all         --       anywhere  anywhere     /*  kubernetes  service  portals  */
+    $ sudo iptables -t nat -L KUBE-SERVICES  -n  | column -t
+    Chain                      KUBE-SERVICES  (2   references)
+    target                     prot           opt  source       destination
+    KUBE-SVC-NPX46M4PTMTKRN6Y  tcp            --   0.0.0.0/0    10.96.0.1      /*  default/kubernetes:https      cluster  IP          */     tcp   dpt:443
+    KUBE-SVC-DZ6LTOHRG6HQWHYE  tcp            --   0.0.0.0/0    10.111.34.177  /*  default/hello-world           cluster  IP          */     tcp   dpt:8080
+    KUBE-SVC-TCOU7JCQXEZGVUNU  udp            --   0.0.0.0/0    10.96.0.10     /*  kube-system/kube-dns:dns      cluster  IP          */     udp   dpt:53
+    KUBE-SVC-ERIFXISQEP7F7OF4  tcp            --   0.0.0.0/0    10.96.0.10     /*  kube-system/kube-dns:dns-tcp  cluster  IP          */     tcp   dpt:53
+    KUBE-SVC-JD5MR3NA4I4DYORP  tcp            --   0.0.0.0/0    10.96.0.10     /*  kube-system/kube-dns:metrics  cluster  IP          */     tcp   dpt:9153
+    KUBE-NODEPORTS             all            --   0.0.0.0/0    0.0.0.0/0      /*  kubernetes                    service  nodeports;  NOTE:  this  must      be  the  last  rule  in  this  chain  */  ADDRTYPE  match  dst-type  LOCAL
+    $ sudo iptables -t nat -L KUBE-NODEPORTS  -n  | column -t
+    Chain                      KUBE-NODEPORTS  (1   references)
+    target                     prot            opt  source       destination
+    KUBE-EXT-DZ6LTOHRG6HQWHYE  tcp             --   0.0.0.0/0    0.0.0.0/0    /*  default/hello-world  */  tcp  dpt:30583
+    $ sudo iptables -t nat -L KUBE-EXT-DZ6LTOHRG6HQWHYE  -n  | column -t
+    Chain                      KUBE-EXT-DZ6LTOHRG6HQWHYE  (1   references)
+    target                     prot                       opt  source       destination
+    KUBE-MARK-MASQ             all                        --   0.0.0.0/0    0.0.0.0/0    /*  masquerade  traffic  for  default/hello-world  external  destinations  */
+    KUBE-SVC-DZ6LTOHRG6HQWHYE  all                        --   0.0.0.0/0    0.0.0.0/0
+    $ sudo iptables -t nat -L KUBE-SVC-DZ6LTOHRG6HQWHYE  -n  | column -t
+    Chain                      KUBE-SVC-DZ6LTOHRG6HQWHYE  (2   references)
+    target                     prot                       opt  source          destination
+    KUBE-MARK-MASQ             tcp                        --   !10.244.0.0/16  10.111.34.177  /*  default/hello-world  cluster  IP                 */  tcp        dpt:8080
+    KUBE-SEP-KNPMKP4TJWLYHY4M  all                        --   0.0.0.0/0       0.0.0.0/0      /*  default/hello-world  ->       10.244.1.200:8080  */  statistic  mode      random  probability  0.50000000000
+    KUBE-SEP-ZYVBQARSCNBBR4HH  all                        --   0.0.0.0/0       0.0.0.0/0      /*  default/hello-world  ->       10.244.2.192:8080  */
+    $
+
 
 LoadBalancer
 ~~~~~~~~~~~~~
