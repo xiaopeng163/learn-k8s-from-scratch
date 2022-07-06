@@ -167,3 +167,59 @@ LoadBalancer
 
 The service becomes accessible externally through a cloud provider's load balancer functionality. GCP, AWS, Azure, and OpenStack offer this functionality.
 
+Azure kubernetes cluster
+
+.. code-block:: bash
+
+  $ kubectl get nodes -o wide
+  NAME                                 STATUS   ROLES   AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
+  aks-services-38564575-vmss000003     Ready    agent   4m56s   v1.21.9   10.224.0.4    <none>        Ubuntu 18.04.6 LTS   5.4.0-1083-azure   containerd://1.4.13+azure-3
+  aks-workspaces-33629094-vmss000003   Ready    agent   5m10s   v1.21.9   10.224.0.5    <none>        Ubuntu 18.04.6 LTS   5.4.0-1083-azure   containerd://1.4.13+azure-3
+
+create Deoployment
+
+.. code-block:: yaml
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: hello-world
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: hello-world
+      template:
+        metadata:
+          labels:
+            app: hello-world
+        spec:
+          containers:
+          - name: hello-world
+            image: gcr.io/google-samples/hello-app:1.0
+            ports:
+            - containerPort: 8080
+
+.. code-block:: bash
+
+  $ kubectl get deployments.apps
+  NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+  hello-world   2/2     2            2           5m50s
+  $ kubectl get pods -o wide
+  NAME                           READY   STATUS    RESTARTS   AGE    IP           NODE                               NOMINATED NODE   READINESS GATES
+  hello-world-54575d5b77-cp75f   1/1     Running   0          6m4s   10.244.1.5   aks-services-38564575-vmss000003   <none>           <none>
+  hello-world-54575d5b77-g24fm   1/1     Running   0          6m4s   10.244.1.6   aks-services-38564575-vmss000003   <none>           <none>
+  $
+
+create Service
+
+.. code-block:: bash
+
+  $ kubectl expose deployment hello-world --port=80 --target-port=8080 --type=LoadBalancer
+  service/hello-world exposed
+  $ kubectl get service
+  NAME          TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)        AGE
+  hello-world   LoadBalancer   10.0.202.198   23.97.235.50   80:31468/TCP   29s
+
+打开浏览器访问 http://23.97.235.50/
+
