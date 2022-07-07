@@ -35,4 +35,5 @@ Kubernetes Network Topology
    network/pod-network
    network/cluster-dns
    network/service
+   network/service-auto
    network/ingress
