@@ -3,6 +3,83 @@ Service Discovery
 
 Kubernetes 服务的自动发现。
 
+.. code-block:: yaml
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: redis-deployment
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: redis-server
+      template:
+        metadata:
+          labels:
+            app: redis-server
+        spec:
+          containers:
+            - name: redis-server
+              image: redis:latest
+              command:
+                - redis-server
+                - --requirepass
+                - redis
+              ports:
+                - containerPort: 6379
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: redis
+    spec:
+      selector:
+        app: redis-server
+      ports:
+        - protocol: TCP
+          port: 6379
+          targetPort: 6379
+
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: flask-deployment
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: flask-app
+      template:
+        metadata:
+          labels:
+            app: flask-app
+        spec:
+          containers:
+            - name: flask-app
+              image: xiaopeng163/flask-redis
+              ports:
+                - containerPort: 5000
+              env:
+                - name: REDIS_HOST
+                  value: ????????????????????????
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: flask-service
+    spec:
+      selector:
+        app: flask-app
+      ports:
+        - protocol: TCP
+          port: 8000
+          targetPort: 5000
+
+
+
+
 DNS
 ------
 
