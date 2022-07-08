@@ -3,6 +3,9 @@ Service Discovery
 
 Kubernetes 服务的自动发现。
 
+
+源码 https://github.com/xiaopeng163/flask-redis
+
 .. code-block:: yaml
 
     apiVersion: apps/v1
