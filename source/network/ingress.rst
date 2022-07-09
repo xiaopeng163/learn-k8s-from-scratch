@@ -10,6 +10,10 @@ What is Ingress?
 .. image:: ../_static/network/ingress-overview.svg
    :alt: ingress-overview
 
+.. image:: ../_static/network/kubernetes-ingress.png
+   :alt: ingress-k8s
+
+
 
 简单说，就是接收请求，并根据一定的路由规则，把请求转发到相应的Service上去。
 
