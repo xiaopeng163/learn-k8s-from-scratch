@@ -113,6 +113,28 @@ Create ingress resource:
 Exposing Multiple Services with Ingress
 ------------------------------------------
 
+
+创建两个deployment，两个Service
+
+.. code-block:: bash
+
+  $ kubectl create deployment web1 --image=gcr.io/google-samples/hello-app:1.0 --port=8080 --replicas=2
+  $ kubectl expose deployment web1 --port 9001 --target-port 8080
+  $ kubectl create deployment web2 --image=gcr.io/google-samples/hello-app:2.0 --port=8080 --replicas=2
+  $ kubectl expose deployment web2 --port 9002 --target-port 8080
+
+  $ kubectl get deployments.apps
+  NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+  web1   2/2     2            2           2m3s
+  web2   2/2     2            2           111s
+  $ kubectl get svc
+  NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+  kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP    39d
+  web1         ClusterIP   10.99.37.121   <none>        9001/TCP   89s
+  web2         ClusterIP   10.102.94.47   <none>        9002/TCP   81s
+
+创建Ingress
+
 .. code-block:: yaml
 
     apiVersion: networking.k8s.io/v1
@@ -122,28 +144,78 @@ Exposing Multiple Services with Ingress
     spec:
       ingressClassName: nginx
       rules:
-        - host: path.example.com
+        - host: api.example.com
           http:
             paths:
-            - path: /red
+            - path: /v1
               pathType: Prefix
               backend:
                 service:
-                  name: hello-world-service-red
+                  name: web1
                   port:
-                    number: 4242
-            - path: /blue
+                    number: 9001
+            - path: /v2
               pathType: Prefix
               backend:
                 service:
-                  name: hello-world-service-blue
+                  name: web2
                   port:
-                    number: 4343
+                    number: 9002
       defaultBackend:
         service:
-          name: hello-world-service-single
+          name: web1
           port:
-            number: 80
+            number: 9001
+
+.. code-block:: bash
+
+  $ kubectl get ingress
+  NAME               CLASS   HOSTS             ADDRESS   PORTS   AGE
+  ingress-multiple   nginx   api.example.com             80      23m
+  $ kubectl describe ingress ingress-multiple
+  Name:             ingress-multiple
+  Labels:           <none>
+  Namespace:        default
+  Address:
+  Ingress Class:    nginx
+  Default backend:  web1:9001 (10.244.1.212:8080,10.244.2.204:8080)
+  Rules:
+    Host             Path  Backends
+    ----             ----  --------
+    api.example.com
+                    /v1   web1:9001 (10.244.1.212:8080,10.244.2.204:8080)
+                    /v2   web2:9002 (10.244.1.213:8080,10.244.2.205:8080)
+  Annotations:       <none>
+  Events:
+    Type    Reason  Age   From                      Message
+    ----    ------  ----  ----                      -------
+    Normal  Sync    23m   nginx-ingress-controller  Scheduled for sync
+
+设置hosts文件
+
+.. code-block:: bash
+
+  $ more /etc/hosts
+
+  10.104.170.176 api.example.com
+
+访问
+
+.. code-block:: bash
+
+  $ curl api.example.com
+  Hello, world!
+  Version: 1.0.0
+  Hostname: web1-7f6c665f7d-nmg8d
+  $ curl api.example.com/v1
+  Hello, world!
+  Version: 1.0.0
+  Hostname: web1-7f6c665f7d-472c2
+  $ curl api.example.com/v2
+  Hello, world!
+  Version: 2.0.0
+  Hostname: web2-8c85c8cd8-xw6f7
+  $
 
 
 Name Based Virtual Hosts with Ingress
