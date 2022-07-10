@@ -110,9 +110,11 @@ Create ingress resource:
   $ more /etc/hosts | grep demo
   10.101.55.153 demo.localdev.me
 
-Exposing Multiple Services with Ingress
-------------------------------------------
+Exposing Multiple Services with Ingress (Simple fanout )
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. image:: ../_static/network/ingress-fanout.png
+   :alt: ingress-k8s-fanout
 
 创建两个deployment，两个Service
 
@@ -219,7 +221,10 @@ Exposing Multiple Services with Ingress
 
 
 Name Based Virtual Hosts with Ingress
-------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. image:: ../_static/network/ingress-virtual-host.png
+   :alt: ingress-k8s-vh
 
 .. code-block:: yaml
 
@@ -230,29 +235,33 @@ Name Based Virtual Hosts with Ingress
     spec:
       ingressClassName: nginx
       rules:
-        - host: red.example.com
+        - host: v1.api.example.com
           http:
             paths:
             - path: /
               pathType: Prefix
               backend:
                 service:
-                  name: hello-world-service-red
+                  name: web1
                   port:
-                    number: 4242
-        - host: blue.example.com
+                    number: 9091
+        - host: v2.api.example.com
           http:
             paths:
             - path: /
               pathType: Prefix
               backend:
                 service:
-                  name: hello-world-service-blue
+                  name: web2
                   port:
-                    number: 4343
+                    number: 9091
+
 
 Using TLS certificates for HTTPs Ingress
--------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+ingress-virtual-host.png
 
 .. code-block:: yaml
 
