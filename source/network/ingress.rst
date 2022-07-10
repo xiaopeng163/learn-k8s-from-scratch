@@ -244,7 +244,7 @@ Name Based Virtual Hosts with Ingress
                 service:
                   name: web1
                   port:
-                    number: 9091
+                    number: 9001
         - host: v2.api.example.com
           http:
             paths:
@@ -254,11 +254,36 @@ Name Based Virtual Hosts with Ingress
                 service:
                   name: web2
                   port:
-                    number: 9091
+                    number: 9002
 
 
 Using TLS certificates for HTTPs Ingress
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+生成key
+
+.. code-block:: bash
+
+  $ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=api.example.com"
+  Generating a RSA private key
+  ...........+++++
+  ................................+++++
+  writing new private key to 'tls.key'
+  -----
+  $ ls
+  tls.crt  tls.key
+
+
+Create secret:
+
+.. code-block:: bash
+
+  $ kubectl create secret tls test-tls --key="tls.key" --cert="tls.crt"
+  secret/test-tls created
+  $ kubectl get secrets
+  NAME       TYPE                DATA   AGE
+  test-tls   kubernetes.io/tls   2      6s
 
 
 ingress-virtual-host.png
@@ -273,16 +298,30 @@ ingress-virtual-host.png
       ingressClassName: nginx
       tls:
       - hosts:
-          - tls.example.com
-        secretName: tls-secret
+          - api.example.com
+        secretName: test-tls
       rules:
-      - host: tls.example.com
+      - host: api.example.com
         http:
           paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: hello-world-service-single
+                name: web1
                 port:
-                  number
+                  number: 9001
+
+
+创建ingress。
+
+修改hosts文件并测试
+
+.. code-block::  bash
+
+  $ sudo more /etc/hosts | grep api
+  10.104.170.176 api.example.com
+  $ curl https://api.example.com --insecure
+  Hello, world!
+  Version: 1.0.0
+  Hostname: web1-7f6c665f7d-472c2
