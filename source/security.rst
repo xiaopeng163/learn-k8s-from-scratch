@@ -9,12 +9,8 @@ Security
 
 - Difference between Authentication and Authorization:
 
-https://www.geeksforgeeks.org/difference-between-authentication-and-authorization/
-
-Authentication: 你是谁？
-
-Authorization: 你可以干什么？
-
+    - Authentication: 你是谁？
+    - Authorization: 你可以干什么？
 
 - 关于PKI，数字签名，证书等知识 https://learn-cryptography.readthedocs.io/zh/latest/digital-signature/
 

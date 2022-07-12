@@ -10,6 +10,8 @@ CKA Exam Tips
 
 https://docs.linuxfoundation.org/tc-docs/certification/faq-cka-ckad-cks
 
+https://www.zhaohuabing.com/post/2022-02-08-how-to-prepare-cka/
+
 
 kubectl Cheat Sheet
 -----------------------
