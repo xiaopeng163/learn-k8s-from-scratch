@@ -5,23 +5,31 @@ Security
 - Managing Certificates and kubeconfig files
 - Managing Role Based Access Controls
 
-Certificates Based Authentication
+前置知识：
+
+- Difference between Authentication and Authorization:
+
+https://www.geeksforgeeks.org/difference-between-authentication-and-authorization/
+
+Authentication: 你是谁？
+
+Authorization: 你可以干什么？
 
 
-kubectl config view
-kubectl config viewe --raw
+- 关于PKI，数字签名，证书等知识 https://learn-cryptography.readthedocs.io/zh/latest/digital-signature/
 
-Get Certificates
+- SSL单向认证和双向认证
 
-kubectl config view --raw -o jsonpath='{.users[0].user.client-certificate-data}' | base64 --decode > admin.crt
-openssl x509 -in admin.crt --text
+All Kubernetes clusters have two categories of users:
 
-kubectl get pod -v 6
+- service accounts managed by Kubernete, 程序（pod）连接API Server
+- normal users. 普通用户，比如通过kubectl连接API Server
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    security/kubeconfig
-   security/service_account
    security/RBAC
+   security/service_account

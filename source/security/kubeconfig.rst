@@ -2,9 +2,6 @@ Certificates and kubeconfig files
 =====================================
 
 
-关于PKI，数字签名，证书等知识 https://learn-cryptography.readthedocs.io/zh/latest/digital-signature/
-
-
 Certificates and PKI
 ----------------------
 
