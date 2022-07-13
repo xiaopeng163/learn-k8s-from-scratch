@@ -15,6 +15,8 @@ Security
 - 关于PKI，数字签名，证书等知识:
 
     - https://learn-cryptography.readthedocs.io/zh/latest/digital-signature/
+    - 一起学加密 Youtube视频 https://www.youtube.com/playlist?list=PLfQqWeOCIH4AZt3TiSRP4UuL_Y3gxYPAW
+    - 一起学加密 B站视频 https://www.bilibili.com/video/BV1WF411x7mN?spm_id_from=333.999.section.playall
 
 - SSL单向认证和双向认证
 
