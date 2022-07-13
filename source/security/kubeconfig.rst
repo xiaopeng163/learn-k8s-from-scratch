@@ -51,7 +51,7 @@ Create ``CertificateSigning`` Requst object
         name: demouser
     spec:
         groups:
-        - system: authenticated
+        - system:authenticated
         request: put the base64 encoded csr here
         signerName: kubernetes.io/kube-apiserver-client
         usages:
