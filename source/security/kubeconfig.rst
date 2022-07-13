@@ -134,3 +134,13 @@ update kubeconfig file
     "code": 403
     }]
     Error from server (Forbidden): nodes is forbidden: User "demouser" cannot list resource "nodes" in API group "" at the cluster scope
+
+
+清理
+--------
+
+.. code-block:: bash
+
+    $ kubectl config use-context kubernetes-admin@kubernetes
+    $ kubectl config delete-context demo
+    $ kubectl config delete-user demouser
