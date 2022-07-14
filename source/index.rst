@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Learn Kubernetes from Scratch(未完成，正在编写中)
-=================================================
+Learn Kubernetes from Scratch(未完成，正在编写中，计划2022年7月底全部完成)
+============================================================================
 
 .. warning::
 
