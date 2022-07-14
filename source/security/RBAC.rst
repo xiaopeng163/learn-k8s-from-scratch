@@ -64,11 +64,70 @@ Test
 ------------
 
 
+Role and RoleBinding
+~~~~~~~~~~~~~~~~~~~~~~~
+
 .. code-block:: bash
 
-    $ kubectl auth can-i list pods
-    $ kubectl auth can-i list pods --as=demouser --namespace ns1
+    # 以管理员身份创建一些资源
+    $ kubectl config use-context kubernetes-admin@kubernetes
+    $ kubectl create namespace ns1
+    $ kubectl create deployment web1 --namespace=ns1 --image=gcr.io/google-samples/hello-app:1.0 --port=8080 --replicas=2
 
-    $ kubectl get pods --namespace ns1 --as=demouser
+    # test
+    $ kubectl auth can-i list pod
+    yes
+    $ kubectl auth can-i list pod --as demouser
+    no
 
-    $ kubectl delete pod <podname> --namespace ns1 --as=demouser
+    # create role and role binding
+    $ kubectl create role demorole --verb=get,list --resource=pods --namespace ns1
+    role.rbac.authorization.k8s.io/demorole created
+    $ kubectl create rolebinding demorolebinding --role=demorole --user=demouser --namespace ns1
+    rolebinding.rbac.authorization.k8s.io/demorolebinding created
+
+    # test
+    $ kubectl auth can-i list pod --as demouser
+    no
+    $ kubectl auth can-i list pod --as demouser --namespace ns1
+    yes
+    $ kubectl get pods --namespace ns1 --as demouser
+    NAME                    READY   STATUS    RESTARTS   AGE
+    web1-7f6c665f7d-65h6v   1/1     Running   0          9m38s
+    web1-7f6c665f7d-n54t5   1/1     Running   0          9m38s
+    $ kubectl auth can-i delete pod --as demouser --namespace ns1
+    no
+    $ kubectl auth can-i list node --as demouser --namespace ns1
+    Warning: resource 'nodes' is not namespace scoped
+    no
+    $ kubectl auth can-i list deployment --as demouser --namespace ns1
+    no
+
+
+ClusterRole and ClusterRoleBinding
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+    $ kubectl create clusterrole democlusterrole --verb=list --resource=node
+    clusterrole.rbac.authorization.k8s.io/democlusterrole created
+    $ kubectl create clusterrolebinding democlusteerrolebinding --clusterrole=democlusterrole --user=demouser
+    clusterrolebinding.rbac.authorization.k8s.io/democlusteerrolebinding created
+    $ kubectl auth can-i list node
+    Warning: resource 'nodes' is not namespace scoped
+    yes
+    $ kubectl auth can-i list node --as demouser
+    Warning: resource 'nodes' is not namespace scoped
+    yes
+    $
+
+
+
+
+
+
+
+
+
+
+
