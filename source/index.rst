@@ -47,6 +47,7 @@ Learn Kubernetes from Scratch(未完成，正在编写中，计划2022年7月底
    stroage
    network
    security
+   maintaining
    logging-monitoring
    troubleshooting
    practice

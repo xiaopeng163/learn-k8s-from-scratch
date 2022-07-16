@@ -40,7 +40,7 @@ Create pod
        serviceAccount: demosa
        containers:
        - name: client
-         image: busybox
+         image: xiaopeng163/net-box:latest
          command:
           - sh
           - -c
@@ -100,8 +100,7 @@ ServiceAccount Authentication
     "details": {},
     "code": 403
   }/run/secrets/kubernetes.io/serviceaccount #
-  /run/secrets/kubernetes.io/serviceaccount # curl --cacert $CACERT --header "Authorization: Bearer $TOKEN" -X GET https://kubern
-  etes.default.svc.cluster.local/api
+  /run/secrets/kubernetes.io/serviceaccount # curl --cacert $CACERT --header "Authorization: Bearer $TOKEN" -X GET https://kubernetes.default.svc.cluster.local/api
   {
     "kind": "APIVersions",
     "versions": [
@@ -117,8 +116,7 @@ ServiceAccount Authentication
 
 .. code-block:: bash
 
-  /run/secrets/kubernetes.io/serviceaccount # curl --cacert $CACERT --header "Authorization: Bearer $TOKEN" -X GET https://kubern
-  etes.default.svc.cluster.local/api/v1/namespaces/default/pods?limit=500
+  /run/secrets/kubernetes.io/serviceaccount # curl --cacert $CACERT --header "Authorization: Bearer $TOKEN" -X GET https://kubernetes.default.svc.cluster.local/api/v1/namespaces/default/pods?limit=500
   {
     "kind": "Status",
     "apiVersion": "v1",
@@ -177,8 +175,7 @@ RBAC
   /run/secrets/kubernetes.io/serviceaccount # TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
   /run/secrets/kubernetes.io/serviceaccount # CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
   /run/secrets/kubernetes.io/serviceaccount #
-  /run/secrets/kubernetes.io/serviceaccount # curl --cacert $CACERT --header "Authorization: Bearer $TOKEN" -X GET https://kubern
-  etes.default.svc.cluster.local/api/v1/namespaces/default/pods?limit=500
+  /run/secrets/kubernetes.io/serviceaccount # curl --cacert $CACERT --header "Authorization: Bearer $TOKEN" -X GET https://kubernetes.default.svc.cluster.local/api/v1/namespaces/default/pods?limit=500
   {
     "kind": "PodList",
     "apiVersion": "v1",
