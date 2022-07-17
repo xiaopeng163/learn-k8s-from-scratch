@@ -101,14 +101,14 @@ etcd数据的备份可以通过``etcdctl``命令行创建快照snashot进行, �
 
 .. code-block:: bash
 
-    $ ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
+    $ sudo ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
       --cacert=/etc/kubernetes/pki/etcd/ca.crt \
       --cert=/etc/kubernetes/pki/etcd/server.crt \
       --key=/etc/kubernetes/pki/etcd/server.key \
       snapshot save /var/lib/dat-backup.db
 
     # 验证
-    $ ETCDCTL_API=3 etcdctl --write-out=table \
+    $ sudo ETCDCTL_API=3 etcdctl --write-out=table \
       snapshot status /var/lib/dat-backup.db
 
 
