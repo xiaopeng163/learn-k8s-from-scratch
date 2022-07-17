@@ -118,6 +118,17 @@ Restoring etcd with etctl
 
 .. code-block:: bash
 
-    $ ETCDCTL_API=3 etcdctl snapshot restore /var/lib/dat-backup.db
+    $ sudo ETCDCTL_API=3 etcdctl snapshot restore /var/lib/dat-backup.db
+
+    # 备份一下恢复之前的数据, 以防止恢复失败
     $ mv /var/lib/etcd /var/lib/etcd.OLD
+
+    # 复制恢复数据
+    $ sudo mv ./default.etcd /var/lib/etcd
+
+    # 停止etcd容器
+    # 找到容器ID
+    sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps
+    # stop
+    sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock stop <container id>
 
