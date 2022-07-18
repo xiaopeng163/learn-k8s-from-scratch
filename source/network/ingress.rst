@@ -33,6 +33,12 @@ Nginx Ingress Controller: https://github.com/kubernetes/ingress-nginx/blob/main/
 
   $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.1/deploy/static/provider/cloud/deploy.yaml
 
+
+.. note::
+
+  ``ingress-nginx`` 版本的选择要依据kubernetes的版本， 请参考表格https://github.com/kubernetes/ingress-nginx#support-versions-table 
+  例如 k8s ``v1.24.x`` 应该选择ingress-nginx ``v1.3.0`` ，但是在课程录制的时候 ``v1.3.0`` 并没有发布，所以课程演示中我们使用的是 ``v1.2.1``
+
 Type of Ingress
 --------------------------
 

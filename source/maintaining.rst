@@ -9,3 +9,4 @@ Maintaining Kubernetes Clusters
 
    maintaining/etcd
    maintaining/upgrade
+   maintaining/HA

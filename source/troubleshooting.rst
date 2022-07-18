@@ -1,2 +1,2 @@
-Maintaining and Troubleshooting
-==================================
+Troubleshooting
+====================

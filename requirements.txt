@@ -25,3 +25,4 @@ sphinxcontrib-serializinghtml==1.1.4
 urllib3==1.26.5
 sphinx-press-theme==0.7.3
 sphinx-book-theme
+sphinxemoji==0.2.0
