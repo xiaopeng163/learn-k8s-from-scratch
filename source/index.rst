@@ -24,6 +24,13 @@ Learn Kubernetes from Scratch(未完成，正在编写中，计划2022年7月底
    :width: 400
    :alt: wechat
 
+Before Start You Need Know
+===============================
+
+- 一定的Linux命令行基础
+- 了解Docker和容器
+- 一定的网络知识
+- 一定的加密相关知识（非对称加密，HTTPS等）
 
 .. .. note::
 

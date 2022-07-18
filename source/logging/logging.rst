@@ -1,6 +1,8 @@
 Logging
 ===========
 
+参考 https://kubernetes.io/docs/concepts/cluster-administration/logging/
+
 Accessing Log Data - Pods and Containers
 --------------------------------------------
 
@@ -57,3 +59,9 @@ Run from systemd
     systemctl status kubelet.service  # check service status
 
     journalctl -u kubelet.service
+
+centralized logging solutions
+----------------------------------
+
+.. image:: ../_static/logging/fluentd.png
+   :alt: fluentd

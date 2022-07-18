@@ -8,3 +8,4 @@ Logging and Monitoring
    logging/logging
    logging/event
    logging/jsonpath
+   logging/monitoring
