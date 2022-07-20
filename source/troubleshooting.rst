@@ -6,3 +6,4 @@ Troubleshooting
    :caption: Contents:
 
    troubleshooting/tools
+   troubleshooting/app
