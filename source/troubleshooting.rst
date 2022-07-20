@@ -8,4 +8,4 @@ Troubleshooting
    troubleshooting/tools
    troubleshooting/app
    troubleshooting/control-plane
-   troubleshooting/node
+   troubleshooting/nodes
