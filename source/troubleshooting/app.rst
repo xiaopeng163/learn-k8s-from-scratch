@@ -20,7 +20,7 @@ Application Failure
         spec:
           containers:
           - name: hello-world
-            image: gcr.io/google-samples/hello-app:1.0
+            image: gcr.io/google-samples/hello-app:1.o
             ports:
             - containerPort: 8080
     ---
