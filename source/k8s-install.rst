@@ -1,6 +1,7 @@
 Kubernetes Installation
 ===========================
 
+Kubernetes考试版本查看 https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/#
 
 Kubernetes的集群搭建方法有很多种，其中最常见的有：
 
