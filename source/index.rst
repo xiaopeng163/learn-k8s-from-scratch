@@ -57,7 +57,6 @@ Before Start You Need Know
    maintaining
    logging-monitoring
    troubleshooting
-   practice
    exam
 
 
