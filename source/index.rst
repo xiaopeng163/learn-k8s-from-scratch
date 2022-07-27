@@ -14,7 +14,7 @@ Learn Kubernetes from Scratch
 
 .. note::
 
-   如果大家发现文章中的错误，欢迎提PR或者issue指正 https://github.com/xiaopeng163/learn-k8s-from-scratch/issues
+   如果大家发现文章中的错误，欢迎提PR或者issue指正 https://github.com/xiaopeng163/learn-k8s-from-scratch/issues/new
 
    也欢迎大家关注我的微信公众号，会不定期分享一些Docker/k8s的技术文章
 
