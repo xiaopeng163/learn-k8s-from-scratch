@@ -69,7 +69,7 @@ create CronJob
     metadata:
       name: hello
     spec:
-      schedule: "*/ * * * *"
+      schedule: "*/1 * * * *"
       jobTemplate:
         spec:
           template:
