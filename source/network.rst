@@ -17,7 +17,7 @@ https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-networkin
 
 Kubernetes Networking Model
 
-- All pods can communicate with wach other on all Nodes
+- All pods can communicate with each other on all Nodes
 - Agents on a Node can communicate with all pods on that Node
 - No Network Address Translation(NAT)
 
