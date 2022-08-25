@@ -58,7 +58,7 @@ Service Types
 ClusterIP(Default)
 ~~~~~~~~~~~~~~~~~~~~~~
 
-when application deson't need to be accessed by out side of the cluster, 会分配到一个内部的cluster IP。
+when application deson't need to be accessed by the outside of the cluster, 会分配到一个内部的cluster IP。
 
 .. code-block:: bash
 
