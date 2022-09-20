@@ -12,7 +12,7 @@ Basic
   kubectl get namespaces
 
   # get list of all api resources and if they can/not be namespaced
-  kubectl api-resources --namesapced=true | head
+  kubectl api-resources --namespaced=true | head
   kubectl api-resources --namespaced=false | head
 
   kubectl describe namespaces
