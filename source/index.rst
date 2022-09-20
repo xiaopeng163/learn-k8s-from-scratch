@@ -9,8 +9,6 @@ Learn Kubernetes from Scratch
 .. warning::
 
    本课程的目的是帮助大家快速入门Kubernetes，并通过Certified Kubernetes Administrator (CKA)的认证考试。
-   
-   课程购买地址 https://www.udemy.com/course/k8s-chinese/?referralCode=4D8B7AFDBFAF9A8E4F81
 
    目前课程基于的版本是Kubernetes v1.24.x
 
