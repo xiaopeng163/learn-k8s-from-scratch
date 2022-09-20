@@ -72,5 +72,5 @@ kubeadm集群验证
 
 .. code-block:: bash
 
-    $ kubectl delete service web
+    $ kubectl delete service web-service
     $ kubectl delete pod web
