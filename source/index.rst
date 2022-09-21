@@ -8,43 +8,32 @@ Learn Kubernetes from Scratch
 
 .. warning::
 
-   本课程的目的是帮助大家快速入门Kubernetes，并通过Certified Kubernetes Administrator (CKA)的认证考试。
+   🎓🎓🎓 本课程的目的是帮助大家快速入门Kubernetes，并通过 ``Certified Kubernetes Administrator (CKA)`` 的认证考试。
 
-   目前课程基于的版本是Kubernetes v1.24.x
+   目前课程基于的版本是Kubernetes ``v1.24.x``
 
-.. note::
+感谢以下对此文档做出贡献的同学：
+----------------------------------------
 
-   如果大家发现文章中的错误，欢迎提PR或者issue指正 https://github.com/xiaopeng163/learn-k8s-from-scratch/issues/new
+.. contributors:: xiaopeng163/learn-k8s-from-scratch
+   :avatars:
+   :exclude: xiaopeng163,dependabot[bot], dependabot-preview[bot]
+   :order: DESC
 
-   也欢迎大家关注我的微信公众号，会不定期分享一些Docker/k8s的技术文章
-
-   其他联系方式： `GitHub <https://github.com/xiaopeng163>`_, `Twitter <https://twitter.com/xiaopeng163>`_, `YouTube <https://www.youtube.com/channel/UCmjdhwMGSut8mZ1CqnRjjUw>`_
-
-.. image:: _static/wechat.jpg
-   :width: 400
-   :alt: wechat
 
 Before Start You Need Know
-===============================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - 一定的Linux命令行基础
 - 了解Docker和容器
 - 一定的网络知识
 - 一定的加密相关知识（非对称加密，HTTPS等）
 
-.. .. note::
-
-..    请大家支持正版，请大家支持正版，请大家支持正版。大家的支持才是我录制和更新课程的动力
-..    有购买了盗版或者白嫖的同学，如果过意不去也可以给我打赏，金额随意
-
-.. .. image:: _static/wechat-tips.jpg
-..    :width: 250
-..    :alt: wechat-tips
-
+目录
+------
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    introduction
    k8s-install
@@ -58,8 +47,7 @@ Before Start You Need Know
    logging-monitoring
    troubleshooting
    exam
-
-
+   about
 
 Indices and tables
 ==================

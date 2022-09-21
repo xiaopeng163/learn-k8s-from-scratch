@@ -14,15 +14,16 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+from datetime import date
 
 # -- Project information -----------------------------------------------------
 
 project = 'Learn Kubernetes from Scratch'
-copyright = '2022, Peng Xiao'
+copyright = str(date.today().year) + ", Peng Xiao. All rights reserved."
 author = 'Peng Xiao'
 
 # The full version, including alpha/beta/rc tags
-release = 'beta'
+release = '1.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -31,9 +32,10 @@ release = 'beta'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinxemoji.sphinxemoji"
+    "sphinxemoji.sphinxemoji", "sphinx_contributors", "sphinx_copybutton"
 ]
 sphinxemoji_style = 'twemoji'
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -49,9 +51,18 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
-
+# html_theme = 'sphinx_rtd_theme'
+html_theme = "furo"
+html_title = "Learn Kubernetes from Scratch"
+html_theme_options = {}
+html_theme_options["announcement"] = (
+        "🙏🙏🙏 如果大家发现文章中的错误，欢迎提PR或者issue指正 "
+        "<a href='https://github.com/xiaopeng163/learn-k8s-from-scratch/issues/new'>文档源码地址</a>."
+)
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_css_files = [
+    "css/custom.css",
+]
