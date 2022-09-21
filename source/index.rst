@@ -6,9 +6,9 @@
 Learn Kubernetes from Scratch
 ========================================
 
-.. warning::
+.. note::
 
-   🎓🎓🎓 本课程的目的是帮助大家快速入门Kubernetes，并通过 ``Certified Kubernetes Administrator (CKA)`` 的认证考试。
+   🎓🎓🎓 本文档的目的是帮助大家快速入门Kubernetes，并通过 ``Certified Kubernetes Administrator (CKA)`` 的认证考试。
 
    目前课程基于的版本是Kubernetes ``v1.24.x``
 
