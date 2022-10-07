@@ -37,3 +37,4 @@ Kubernetes Network Topology
    network/service
    network/service-auto
    network/ingress
+   network/resource
