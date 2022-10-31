@@ -38,7 +38,7 @@ though that volume can be mounted at the same or different paths in each contain
           - containerPort: 80
         volumeMounts:
         - name: webcontent
-          mountPath: /user/share/nginx/html
+          mountPath: /usr/share/nginx/html
       volumes:
       - name: webcontent
         emptyDir: {}
@@ -73,7 +73,7 @@ This is not something that most Pods will need, but it offers a powerful escape 
             - containerPort: 80
           volumeMounts:
           - name: webcontent
-            mountPath: /user/share/nginx/html
+            mountPath: /usr/share/nginx/html
         volumes:
         - name: webcontent
           hostPath:
