@@ -71,12 +71,11 @@ API Object通过以下字段组织起来
    apiVersion: v1
    kind: Pod
    metadata:
-      name: web
+     name: web
    spec:
-      containers:
-      - name: nginx-container
-         image: nginx:latest
-
+     containers:
+     - name: nginx-container
+       image: nginx:latest
 
 .. code-block:: bash
 
