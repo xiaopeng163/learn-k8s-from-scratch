@@ -70,7 +70,7 @@ kubeadm
 
 .. note::
 
-   如果要修改Kubernetes版本，请修改下面脚本的最后一行，当前我们使用的版本是 ``1.24.0``, 可以通过命令 ``apt list -a kubeadm`` 查看可用版本
+   如果要修改Kubernetes版本，请修改下面脚本的最后一行，当前我们使用的版本是 ``1.26.0``, 可以通过命令 ``apt list -a kubeadm`` 查看可用版本
 
 .. code-block:: bash
 
@@ -100,10 +100,13 @@ kubeadm
     sysctl --system >/dev/null 2>&1
 
     echo "[TASK 5] Install containerd runtime"
-    apt update -qq >/dev/null 2>&1
-    apt install -qq -y containerd apt-transport-https >/dev/null 2>&1
-    mkdir /etc/containerd
-    containerd config default > /etc/containerd/config.toml
+    mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    apt -qq update >/dev/null 2>&1
+    apt install -qq -y containerd.io >/dev/null 2>&1
+    containerd config default >/etc/containerd/config.toml
     systemctl restart containerd
     systemctl enable containerd >/dev/null 2>&1
 
@@ -112,7 +115,7 @@ kubeadm
     apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main" >/dev/null 2>&1
 
     echo "[TASK 7] Install Kubernetes components (kubeadm, kubelet and kubectl)"
-    apt install -qq -y kubeadm=1.24.0-00 kubelet=1.24.0-00 kubectl=1.24.0-00 >/dev/null 2>&1
+    apt install -qq -y kubeadm=1.26.0-00 kubelet=1.26.0-00 kubectl=1.26.0-00 >/dev/null 2>&1
 
 
 脚本结束以后，可以检查下kubeadm，kubelet，kubectl的安装情况,如果都能获取到版本号，说明安装成功。
@@ -121,13 +124,13 @@ kubeadm
 .. code-block:: bash
 
     vagrant@k8s-master:~$ kubeadm version
-    kubeadm version: &version.Info{Major:"1", Minor:"24", GitVersion:"v1.24.0", GitCommit:"4ce5a8954017644c5420bae81d72b09b735c21f0", GitTreeState:"clean", BuildDate:"2022-05-03T13:44:24Z", GoVersion:"go1.18.1", Compiler:"gc", Platform:"linux/amd64"}
+    kubeadm version: &version.Info{Major:"1", Minor:"26", GitVersion:"v1.26.0", GitCommit:"b46a3f887ca979b1a5d14fd39cb1af43e7e5d12d", GitTreeState:"clean", BuildDate:"2022-12-08T19:57:06Z", GoVersion:"go1.19.4", Compiler:"gc", Platform:"linux/amd64"}
     vagrant@k8s-master:~$ kubelet --version
-    Kubernetes v1.24.0
+    Kubernetes v1.26.0
     vagrant@k8s-master:~$ kubectl version
     WARNING: This version information is deprecated and will be replaced with the output from kubectl version --short.  Use --output=yaml|json to get the full version.
-    Client Version: version.Info{Major:"1", Minor:"24", GitVersion:"v1.24.0", GitCommit:"4ce5a8954017644c5420bae81d72b09b735c21f0", GitTreeState:"clean", BuildDate:"2022-05-03T13:46:05Z", GoVersion:"go1.18.1", Compiler:"gc", Platform:"linux/amd64"}
-    Kustomize Version: v4.5.4
+    Client Version: version.Info{Major:"1", Minor:"26", GitVersion:"v1.26.0", GitCommit:"b46a3f887ca979b1a5d14fd39cb1af43e7e5d12d", GitTreeState:"clean", BuildDate:"2022-12-08T19:58:30Z", GoVersion:"go1.19.4", Compiler:"gc", Platform:"linux/amd64"}
+    Kustomize Version: v4.5.7
     The connection to the server localhost:8080 was refused - did you specify the right host or port?
     vagrant@k8s-master:~$
 
@@ -145,13 +148,13 @@ kubeadm
 .. code-block:: bash
 
     vagrant@k8s-master:~$ sudo kubeadm config images pull
-    [config/images] Pulled k8s.gcr.io/kube-apiserver:v1.24.0
-    [config/images] Pulled k8s.gcr.io/kube-controller-manager:v1.24.0
-    [config/images] Pulled k8s.gcr.io/kube-scheduler:v1.24.0
-    [config/images] Pulled k8s.gcr.io/kube-proxy:v1.24.0
-    [config/images] Pulled k8s.gcr.io/pause:3.7
-    [config/images] Pulled k8s.gcr.io/etcd:3.5.3-0
-    [config/images] Pulled k8s.gcr.io/coredns/coredns:v1.8.6
+    [config/images] Pulled registry.k8s.io/kube-apiserver:v1.26.1
+    [config/images] Pulled registry.k8s.io/kube-controller-manager:v1.26.1
+    [config/images] Pulled registry.k8s.io/kube-scheduler:v1.26.1
+    [config/images] Pulled registry.k8s.io/kube-proxy:v1.26.1
+    [config/images] Pulled registry.k8s.io/pause:3.9
+    [config/images] Pulled registry.k8s.io/etcd:3.5.6-0
+    [config/images] Pulled registry.k8s.io/coredns/coredns:v1.9.3
 
 初始化Kubeadm
 
@@ -337,9 +340,9 @@ token 可以通过 ``kubeadm token list``获取到，比如 ``0pdoeh.wrqchegv3xm
 
   vagrant@k8s-master:~$ kubectl get nodes
   NAME          STATUS   ROLES           AGE     VERSION
-  k8s-master    Ready    control-plane   3h26m   v1.24.0
-  k8s-worker1   Ready    <none>          3h24m   v1.24.0
-  k8s-worker2   Ready    <none>          3h23m   v1.24.0
+  k8s-master    Ready    control-plane   3h26m   v1.26.0
+  k8s-worker1   Ready    <none>          3h24m   v1.26.0
+  k8s-worker2   Ready    <none>          3h23m   v1.26.0
   vagrant@k8s-master:~$
 
 
@@ -378,9 +381,9 @@ Fix node internal IP issue
 
   vagrant@k8s-master:~$ kubectl get nodes -o wide
   NAME          STATUS   ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-  k8s-master    Ready    control-plane   3h48m   v1.24.0   10.0.2.15     <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
-  k8s-worker1   Ready    worker          3h29m   v1.24.0   10.0.2.15     <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
-  k8s-worker2   Ready    worker          3h28m   v1.24.0   10.0.2.15     <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
+  k8s-master    Ready    control-plane   3h48m   v1.26.0   10.0.2.15     <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
+  k8s-worker1   Ready    worker          3h29m   v1.26.0   10.0.2.15     <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
+  k8s-worker2   Ready    worker          3h28m   v1.26.0   10.0.2.15     <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
   vagrant@k8s-master:~$ ip -c a
   1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
       link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -420,9 +423,9 @@ Fix node internal IP issue
   vagrant@k8s-master:~$ sudo systemctl restart kubelet
   vagrant@k8s-master:~$ kubectl get node -o wide
   NAME          STATUS   ROLES           AGE     VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-  k8s-master    Ready    control-plane   3h55m   v1.24.0   192.168.56.10   <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
-  k8s-worker1   Ready    worker          3h35m   v1.24.0   10.0.2.15       <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
-  k8s-worker2   Ready    worker          3h35m   v1.24.0   10.0.2.15       <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
+  k8s-master    Ready    control-plane   3h55m   v1.26.0   192.168.56.10   <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
+  k8s-worker1   Ready    worker          3h35m   v1.26.0   10.0.2.15       <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
+  k8s-worker2   Ready    worker          3h35m   v1.26.0   10.0.2.15       <none>        Ubuntu 20.04.4 LTS   5.4.0-113-generic   containerd://1.5.9
   vagrant@k8s-master:~$
 
 通过同样的方法可以修改worker1和worker2节点的internal IP地址。
