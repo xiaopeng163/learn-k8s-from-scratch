@@ -7,9 +7,9 @@ kubeadm集群验证
 
     vagrant@k8s-master:~$ kubectl get nodes
     NAME          STATUS   ROLES           AGE     VERSION
-    k8s-master    Ready    control-plane   3h49m   v1.24.0
-    k8s-worker1   Ready    <none>          3h47m   v1.24.0
-    k8s-worker2   Ready    <none>          3h46m   v1.24.0
+    k8s-master    Ready    control-plane   3h49m   v1.26.0
+    k8s-worker1   Ready    <none>          3h47m   v1.26.0
+    k8s-worker2   Ready    <none>          3h46m   v1.26.0
     vagrant@k8s-master:~$
 
 

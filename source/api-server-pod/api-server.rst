@@ -46,7 +46,7 @@ API Object是通过API server可以操作的Kubernetes对象，它们代表了�
 API Object通过以下字段组织起来
 
 - Kind (Pod, Deployment, Service, etc.)
-- Group (core, apps, storage), see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/
+- Group (core, apps, storage), see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/
 - Version (v1, beta, alpha) see https://kubernetes.io/docs/reference/using-api/#api-versioning
 
 .. code-block:: bash
