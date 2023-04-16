@@ -23,7 +23,7 @@ Kubernetes的API Server是一个client/server的架构
    $ kubectl cluster-info
    $ kubectl config view
    $ kubectl config view --raw
-   $ kubectl config get-context
+   $ kubectl config get-contexts
 
 
 Clients
