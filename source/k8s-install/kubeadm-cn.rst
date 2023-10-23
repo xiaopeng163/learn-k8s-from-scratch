@@ -1,8 +1,9 @@
-kubeadm
-==============
+kubeadm - 针对中国大陆用户
+===============================
 
-参考文档 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+.. warning::
 
+   如果您无法访问谷歌，那么请继续阅读本文档。
 
 环境准备
 ~~~~~~~~~
@@ -52,7 +53,7 @@ kubeadm
 
 .. warning::
 
-   请注意上面准备的机器必须能够访问互联网，中国大陆的朋友要确保机器能访问Google
+   请注意上面准备的机器必须能够访问互联网。
 
 .. warning::
 
@@ -76,6 +77,13 @@ kubeadm
 
     #!/bin/bash
 
+    # setup timezone
+    echo "[TASK 0] Set timezone"
+    timedatectl set-timezone Asia/Shanghai
+    apt-get install -y ntpdate >/dev/null 2>&1
+    ntpdate ntp.aliyun.com
+
+
     echo "[TASK 1] Disable and turn off SWAP"
     sed -i '/swap/d' /etc/fstab
     swapoff -a
@@ -84,7 +92,7 @@ kubeadm
     systemctl disable --now ufw >/dev/null 2>&1
 
     echo "[TASK 3] Enable and Load Kernel modules"
-    cat >>/etc/modules-load.d/containerd.conf<<EOF
+    cat >>/etc/modules-load.d/containerd.conf <<EOF
     overlay
     br_netfilter
     EOF
@@ -92,7 +100,7 @@ kubeadm
     modprobe br_netfilter
 
     echo "[TASK 4] Add Kernel settings"
-    cat >>/etc/sysctl.d/kubernetes.conf<<EOF
+    cat >>/etc/sysctl.d/kubernetes.conf <<EOF
     net.bridge.bridge-nf-call-ip6tables = 1
     net.bridge.bridge-nf-call-iptables  = 1
     net.ipv4.ip_forward                 = 1
@@ -103,16 +111,18 @@ kubeadm
     mkdir -p /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     apt -qq update >/dev/null 2>&1
     apt install -qq -y containerd.io >/dev/null 2>&1
     containerd config default >/etc/containerd/config.toml
     systemctl restart containerd
     systemctl enable containerd >/dev/null 2>&1
 
+
     echo "[TASK 6] Add apt repo for kubernetes"
-    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - >/dev/null 2>&1
-    apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main" >/dev/null 2>&1
+    curl -fsSL https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add > /dev/null 2>&1
+    echo "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null 2>&1
+    apt-get update >/dev/null 2>&1
 
     echo "[TASK 7] Install Kubernetes components (kubeadm, kubelet and kubectl)"
     apt install -qq -y kubeadm=1.28.0-00 kubelet=1.28.0-00 kubectl=1.28.0-00 >/dev/null 2>&1
@@ -127,6 +137,8 @@ kubeadm
     kubelet --version
     kubectl version
 
+
+
 初始化master节点
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -138,19 +150,20 @@ kubeadm
 
 .. code-block:: bash
 
-    sudo kubeadm config images pull
+    sudo kubeadm config images pull --image-repository=registry.aliyuncs.com/google_containers
+
 
 如果拉取成功，会看到类似下面的输出：
 
 .. code-block:: bash
 
-    [config/images] Pulled registry.k8s.io/kube-apiserver:v1.28.2
-    [config/images] Pulled registry.k8s.io/kube-controller-manager:v1.28.2
-    [config/images] Pulled registry.k8s.io/kube-scheduler:v1.28.2
-    [config/images] Pulled registry.k8s.io/kube-proxy:v1.28.2
-    [config/images] Pulled registry.k8s.io/pause:3.9
-    [config/images] Pulled registry.k8s.io/etcd:3.5.6-0
-    [config/images] Pulled registry.k8s.io/coredns/coredns:v1.9.3
+    [config/images] Pulled registry.aliyuncs.com/google_containers/kube-apiserver:v1.28.2
+    [config/images] Pulled registry.aliyuncs.com/google_containers/kube-controller-manager:v1.28.2
+    [config/images] Pulled registry.aliyuncs.com/google_containers/kube-scheduler:v1.28.2
+    [config/images] Pulled registry.aliyuncs.com/google_containers/kube-proxy:v1.28.2
+    [config/images] Pulled registry.aliyuncs.com/google_containers/pause:3.9
+    [config/images] Pulled registry.aliyuncs.com/google_containers/etcd:3.5.9-0
+    [config/images] Pulled registry.aliyuncs.com/google_containers/coredns:v1.10.1
 
 初始化Kubeadm
 
@@ -159,7 +172,7 @@ kubeadm
 
 .. code-block:: bash
 
-    vagrant@k8s-master:~$ sudo kubeadm init --apiserver-advertise-address=192.168.56.10  --pod-network-cidr=10.244.0.0/16
+    sudo kubeadm init --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address=192.168.56.10  --pod-network-cidr=10.244.0.0/16
 
 最后一段的输出要保存好, 这一段指出后续需要做什么配置。
 
@@ -202,14 +215,27 @@ kubeadm
 
 .. code-block:: bash
 
-    $ kubectl get nodes
-    $ kubectl get pods -A
+    kubectl get nodes
+    kubectl get pods -A
+
+类似的输出(两个coredns的pod是pending状态，因为还没有部署pod network)
+
+.. code-block:: bash
+
+  NAMESPACE     NAME                                 READY   STATUS    RESTARTS   AGE
+  kube-system   coredns-66f779496c-dgpt2             0/1     Pending   0          16m
+  kube-system   coredns-66f779496c-jfdq2             0/1     Pending   0          16m
+  kube-system   etcd-k8s-master                      1/1     Running   0          16m
+  kube-system   kube-apiserver-k8s-master            1/1     Running   0          16m
+  kube-system   kube-controller-manager-k8s-master   1/1     Running   0          16m
+  kube-system   kube-proxy-kqbhl                     1/1     Running   0          16m
+  kube-system   kube-scheduler-k8s-master            1/1     Running   0          16m
 
 shell 自动补全
 
 .. code-block:: bash
 
-    $ source <(kubectl completion bash)
+    source <(kubectl completion bash)
 
 
 2. 部署pod network方案
@@ -220,6 +246,10 @@ shell 自动补全
 这里我们选择overlay的方案，名字叫 ``flannel`` 部署方法如下：
 
 下载文件 https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml ，并进行如下修改：
+
+.. code-block:: bash
+
+    curl -LO https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
 
 
 确保network是我们配置的 --pod-network-cidr  10.244.0.0/16
@@ -277,10 +307,10 @@ shell 自动补全
 
 .. code-block:: bash
 
-  $ kubectl apply -f flannel.yaml
+  kubectl apply -f flannel.yaml
 
 
-检查结果， 如果显示下面的结果，pod都是running的状态，说明我们的network方案部署成功。
+检查结果， 如果显示下面的结果，pod都是running的状态，说明我们的network方案部署成功（特别是coredns和flannel)。
 
 .. code-block:: bash
 
@@ -305,7 +335,7 @@ shell 自动补全
 
 .. code-block:: bash
 
-  $ sudo kubeadm join 192.168.56.10:6443 --token 0pdoeh.wrqchegv3xm3k1ow \
+  sudo kubeadm join 192.168.56.10:6443 --token 0pdoeh.wrqchegv3xm3k1ow \
     --discovery-token-ca-cert-hash sha256:f4e693bde148f5c0ff03b66fb24c51f948e295775763e8c5c4e60d24ff57fe82
 
 .. warning::
@@ -335,11 +365,10 @@ token 可以通过 ``kubeadm token list``获取到，比如 ``0pdoeh.wrqchegv3xm
 .. code-block:: bash
 
   vagrant@k8s-master:~$ kubectl get nodes
-  NAME          STATUS   ROLES           AGE     VERSION
-  k8s-master    Ready    control-plane   3h26m   v1.28.2
-  k8s-worker1   Ready    <none>          3h24m   v1.28.2
-  k8s-worker2   Ready    <none>          3h23m   v1.28.2
-  vagrant@k8s-master:~$
+  NAME          STATUS   ROLES           AGE   VERSION
+  k8s-master    Ready    control-plane   42m   v1.28.0
+  k8s-worker1   Ready    <none>          91s   v1.28.0
+  k8s-worker2   Ready    <none>          58s   v1.28.0
 
 
 pod的话，应该可以看到三个flannel，三个proxy的pod
