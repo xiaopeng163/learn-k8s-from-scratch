@@ -206,11 +206,14 @@ kubeadm
     $ kubectl get nodes
     $ kubectl get pods -A
 
-shell 自动补全
+shell 自动补全(Bash)
+
+more information can be found https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete
 
 .. code-block:: bash
 
-    $ source <(kubectl completion bash)
+    source <(kubectl completion bash)
+    echo "source <(kubectl completion bash)" >> ~/.bashrc
 
 
 2. 部署pod network方案

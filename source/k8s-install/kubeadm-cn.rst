@@ -232,11 +232,14 @@ kubeadm - 中国大陆版
   kube-system   kube-proxy-kqbhl                     1/1     Running   0          16m
   kube-system   kube-scheduler-k8s-master            1/1     Running   0          16m
 
-shell 自动补全
+shell 自动补全(Bash)
+
+more information can be found https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete
 
 .. code-block:: bash
 
     source <(kubectl completion bash)
+    echo "source <(kubectl completion bash)" >> ~/.bashrc
 
 
 2. 部署pod network方案
