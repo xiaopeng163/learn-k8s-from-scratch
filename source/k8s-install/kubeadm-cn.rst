@@ -136,7 +136,7 @@ kubeadm - 中国大陆版
 
     kubeadm version
     kubelet --version
-    kubectl version
+    kubectl version --client
 
 
 
