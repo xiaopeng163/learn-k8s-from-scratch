@@ -13,8 +13,8 @@ Learn Kubernetes from Scratch
    目前课程基于的版本是Kubernetes ``v1.28.x`` （2023年10月份更新）
 
 
-感谢以下对此文档做出贡献的同学：
-----------------------------------------
+感谢以下对此文档做出贡献的同学（排名不分高低）：
+--------------------------------------------
 
 .. contributors:: xiaopeng163/learn-k8s-from-scratch
    :avatars:
