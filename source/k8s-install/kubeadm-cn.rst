@@ -311,7 +311,7 @@ more information can be found https://kubernetes.io/docs/reference/kubectl/cheat
 
 .. code-block:: bash
 
-  kubectl apply -f kube-flannel.yaml
+  kubectl apply -f kube-flannel.yml
 
 
 检查结果， 如果显示下面的结果，pod都是running的状态，说明我们的network方案部署成功（特别是coredns和flannel)。
