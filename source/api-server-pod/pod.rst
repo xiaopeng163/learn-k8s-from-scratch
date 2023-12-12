@@ -323,7 +323,7 @@ readinessProbes
 - Won't receive traffic from a service until it succeeds
 - On failure, remove Pod from load balancing
 - Applications that temporarily can't respond to a request
-- Prevents users from seeting errors
+- Prevents users from seeing errors
 
 type of Diagnostic Checks for Probes
 
