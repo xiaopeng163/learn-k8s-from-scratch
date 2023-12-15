@@ -5,7 +5,7 @@ Affinity and Anti-Affinity
 nodeAffinity
 --------------
 
-Ues labels on Nodes to make a scheduling decision with ``matchExpressions``
+Uses labels on Nodes to make a scheduling decision with ``matchExpressions``
 
 https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/
 
