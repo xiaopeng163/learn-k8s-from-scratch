@@ -23,7 +23,7 @@ drain可以gracefully的停止一个节点上的Pod
 
 .. code-block:: bash
 
-    $ kubectl drain <node name> --ingore-daemonsets
+    $ kubectl drain <node name> --ignore-daemonsets
 
 uncordon
 ------------
