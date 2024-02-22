@@ -116,6 +116,7 @@ kubeadm - 中国大陆版
     apt install -qq -y containerd.io >/dev/null 2>&1
     containerd config default >/etc/containerd/config.toml
     sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+    sed -i 's/registry.k8s.io\/pause:3.6/registry.aliyuncs.com\/google_containers\/pause:3.9/g' /etc/containerd/config.toml
     systemctl restart containerd
     systemctl enable containerd >/dev/null 2>&1
 
