@@ -70,53 +70,55 @@ kubeadm
 
 .. note::
 
-   如果要修改Kubernetes版本，请修改下面脚本的最后一行，当前我们使用的版本是 ``1.28.0``, 可以通过命令 ``apt list -a kubeadm`` 查看可用版本
+   如果要修改Kubernetes版本，请修改下面脚本的最后一行，当前我们使用的版本是 ``1.29.2``, 可以通过命令 ``apt list -a kubeadm`` 查看可用版本
 
 .. code-block:: bash
 
-    #!/bin/bash
+  #!/bin/bash
 
-    echo "[TASK 1] Disable and turn off SWAP"
-    sed -i '/swap/d' /etc/fstab
-    swapoff -a
+  echo "[TASK 1] Disable and turn off SWAP"
+  sed -i '/swap/d' /etc/fstab
+  swapoff -a
 
-    echo "[TASK 2] Stop and Disable firewall"
-    systemctl disable --now ufw >/dev/null 2>&1
+  echo "[TASK 2] Stop and Disable firewall"
+  systemctl disable --now ufw >/dev/null 2>&1
 
-    echo "[TASK 3] Enable and Load Kernel modules"
-    cat >>/etc/modules-load.d/containerd.conf<<EOF
-    overlay
-    br_netfilter
-    EOF
-    modprobe overlay
-    modprobe br_netfilter
+  echo "[TASK 3] Enable and Load Kernel modules"
+  cat >>/etc/modules-load.d/containerd.conf<<EOF
+  overlay
+  br_netfilter
+  EOF
+  modprobe overlay
+  modprobe br_netfilter
 
-    echo "[TASK 4] Add Kernel settings"
-    cat >>/etc/sysctl.d/kubernetes.conf<<EOF
-    net.bridge.bridge-nf-call-ip6tables = 1
-    net.bridge.bridge-nf-call-iptables  = 1
-    net.ipv4.ip_forward                 = 1
-    EOF
-    sysctl --system >/dev/null 2>&1
+  echo "[TASK 4] Add Kernel settings"
+  cat >>/etc/sysctl.d/kubernetes.conf<<EOF
+  net.bridge.bridge-nf-call-ip6tables = 1
+  net.bridge.bridge-nf-call-iptables  = 1
+  net.ipv4.ip_forward                 = 1
+  EOF
+  sysctl --system >/dev/null 2>&1
 
-    echo "[TASK 5] Install containerd runtime"
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    apt -qq update >/dev/null 2>&1
-    apt install -qq -y containerd.io >/dev/null 2>&1
-    containerd config default >/etc/containerd/config.toml
-    sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
-    systemctl restart containerd
-    systemctl enable containerd >/dev/null 2>&1
+  echo "[TASK 5] Install containerd runtime"
+  mkdir -p /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  apt -qq update >/dev/null 2>&1
+  apt install -qq -y containerd.io >/dev/null 2>&1
+  containerd config default >/etc/containerd/config.toml
+  sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+  systemctl restart containerd
+  systemctl enable containerd >/dev/null 2>&1
 
-    echo "[TASK 6] Add apt repo for kubernetes"
-    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - >/dev/null 2>&1
-    apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main" >/dev/null 2>&1
+  echo "[TASK 6] Add apt repo for kubernetes"
+  apt-get install -y apt-transport-https ca-certificates curl gpg >/dev/null 2>&1
+  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
 
-    echo "[TASK 7] Install Kubernetes components (kubeadm, kubelet and kubectl)"
-    apt install -qq -y kubeadm=1.28.0-00 kubelet=1.28.0-00 kubectl=1.28.0-00 >/dev/null 2>&1
+  echo "[TASK 7] Install Kubernetes components (kubeadm, kubelet and kubectl)"
+  apt -qq update >/dev/null 2>&1
+  apt install -qq -y kubeadm=1.29.2-1.1 kubelet=1.29.2-1.1 kubectl=1.29.2-1.1  >/dev/null 2>&1
 
 
 脚本结束以后，可以检查下kubeadm，kubelet，kubectl的安装情况,如果都能获取到版本号，说明安装成功。
@@ -145,13 +147,13 @@ kubeadm
 
 .. code-block:: bash
 
-    [config/images] Pulled registry.k8s.io/kube-apiserver:v1.28.2
-    [config/images] Pulled registry.k8s.io/kube-controller-manager:v1.28.2
-    [config/images] Pulled registry.k8s.io/kube-scheduler:v1.28.2
-    [config/images] Pulled registry.k8s.io/kube-proxy:v1.28.2
-    [config/images] Pulled registry.k8s.io/pause:3.9
-    [config/images] Pulled registry.k8s.io/etcd:3.5.6-0
-    [config/images] Pulled registry.k8s.io/coredns/coredns:v1.9.3
+  [config/images] Pulled registry.k8s.io/kube-apiserver:v1.29.2
+  [config/images] Pulled registry.k8s.io/kube-controller-manager:v1.29.2
+  [config/images] Pulled registry.k8s.io/kube-scheduler:v1.29.2
+  [config/images] Pulled registry.k8s.io/kube-proxy:v1.29.2
+  [config/images] Pulled registry.k8s.io/coredns/coredns:v1.11.1
+  [config/images] Pulled registry.k8s.io/pause:3.9
+  [config/images] Pulled registry.k8s.io/etcd:3.5.10-0
 
 初始化Kubeadm
 
@@ -203,8 +205,25 @@ kubeadm
 
 .. code-block:: bash
 
-    $ kubectl get nodes
-    $ kubectl get pods -A
+    kubectl get nodes
+    kubectl get pods -A
+
+得到的输出类似于：
+
+.. code-block:: bash
+
+  vagrant@k8s-master:~$ kubectl get nodes -o wide
+  NAME         STATUS     ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+  k8s-master   NotReady   control-plane   3m10s   v1.29.2   10.211.55.4   <none>        Ubuntu 22.04.2 LTS   5.15.0-76-generic   containerd://1.6.28
+  vagrant@k8s-master:~$ kubectl get pod -A
+  NAMESPACE     NAME                                 READY   STATUS    RESTARTS   AGE
+  kube-system   coredns-76f75df574-4l8fv             0/1     Pending   0          3m18s
+  kube-system   coredns-76f75df574-ztqqx             0/1     Pending   0          3m18s
+  kube-system   etcd-k8s-master                      1/1     Running   0          3m32s
+  kube-system   kube-apiserver-k8s-master            1/1     Running   0          3m32s
+  kube-system   kube-controller-manager-k8s-master   1/1     Running   0          3m33s
+  kube-system   kube-proxy-4mzl6                     1/1     Running   0          3m18s
+  kube-system   kube-scheduler-k8s-master            1/1     Running   0          3m32s
 
 shell 自动补全(Bash)
 
@@ -242,15 +261,14 @@ more information can be found https://kubernetes.io/docs/reference/kubectl/cheat
 
 .. code-block:: yaml
 
-   - name: kube-flannel
-    #image: flannelcni/flannel:v0.18.0 for ppc64le and mips64le (dockerhub limitations may apply)
-     image: rancher/mirrored-flannelcni-flannel:v0.18.0
-     command:
-     - /opt/bin/flanneld
-     args:
-     - --ip-masq
-     - --kube-subnet-mgr
-     - --iface=enp0s8
+    - name: kube-flannel
+      image: docker.io/flannel/flannel:v0.24.2
+      command:
+      - /opt/bin/flanneld
+      args:
+      - --ip-masq
+      - --kube-subnet-mgr
+      - --iface=enp0s8
 
 
 比如我们的机器，这个IP的接口名是 ``enp0s8``
@@ -281,14 +299,28 @@ more information can be found https://kubernetes.io/docs/reference/kubectl/cheat
 
 .. code-block:: bash
 
-  $ kubectl apply -f flannel.yaml
+  kubectl apply -f flannel.yaml
 
+输出结果：
+
+.. code-block:: bash
+
+  vagrant@k8s-master:~$ kubectl apply -f flannel.yml
+  namespace/kube-flannel created
+  clusterrole.rbac.authorization.k8s.io/flannel created
+  clusterrolebinding.rbac.authorization.k8s.io/flannel created
+  serviceaccount/flannel created
+  configmap/kube-flannel-cfg created
+  daemonset.apps/kube-flannel-ds created
 
 检查结果， 如果显示下面的结果，pod都是running的状态，说明我们的network方案部署成功。
 
 .. code-block:: bash
 
-  vagrant@k8s-master:~$ kubectl get pods -A
+  kubectl get pods -A
+
+.. code-block:: bash
+
   NAMESPACE     NAME                                 READY   STATUS    RESTARTS   AGE
   kube-system   coredns-6d4b75cb6d-m5vms             1/1     Running   0          3h19m
   kube-system   coredns-6d4b75cb6d-mmdrx             1/1     Running   0          3h19m
@@ -299,6 +331,13 @@ more information can be found https://kubernetes.io/docs/reference/kubectl/cheat
   kube-system   kube-proxy-jh4w5                     1/1     Running   0          3h17m
   kube-system   kube-scheduler-k8s-master            1/1     Running   0          3h19m
 
+并且node是Ready
+
+.. code-block:: bash
+
+  kubectl get node -o wide
+  NAME         STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+  k8s-master   Ready    control-plane   15m   v1.29.2   10.211.55.4   <none>        Ubuntu 22.04.2 LTS   5.15.0-76-generic   containerd://1.6.28
 
 添加worker节点
 ~~~~~~~~~~~~~~~~~
@@ -338,11 +377,11 @@ token 可以通过 ``kubeadm token list``获取到，比如 ``0pdoeh.wrqchegv3xm
 
 .. code-block:: bash
 
-  vagrant@k8s-master:~$ kubectl get nodes
-  NAME          STATUS   ROLES           AGE     VERSION
-  k8s-master    Ready    control-plane   3h26m   v1.28.2
-  k8s-worker1   Ready    <none>          3h24m   v1.28.2
-  k8s-worker2   Ready    <none>          3h23m   v1.28.2
+  vagrant@k8s-master:~$ kubectl get nodes -o wide
+  NAME          STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+  k8s-master    Ready    control-plane   17m   v1.29.2   10.211.55.4   <none>        Ubuntu 22.04.2 LTS   5.15.0-76-generic   containerd://1.6.28
+  k8s-worker1   Ready    <none>          50s   v1.29.2   10.211.55.5   <none>        Ubuntu 22.04.2 LTS   5.15.0-97-generic   containerd://1.6.28
+  k8s-worker2   Ready    <none>          20s   v1.29.2   10.211.55.6   <none>        Ubuntu 22.04.2 LTS   5.15.0-76-generic   containerd://1.6.28
   vagrant@k8s-master:~$
 
 
@@ -372,6 +411,12 @@ pod的话，应该可以看到三个flannel，三个proxy的pod
 
 Fix node internal IP issue
 -----------------------------
+
+
+.. note::
+
+   貌似Kubernetes ``v1.29.x`` 已经不存在这个问题了，如果你使用的是 ``v1.29.x`` 请忽略这一节。
+
 
 
 如果node的internal IP不对， 例如我们希望的node internal IP地址是en0s8的地址。
