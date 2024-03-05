@@ -28,21 +28,15 @@ Basic
 Container to Container in Pod
 --------------------------------
 
-.. code-block:: yaml
 
-    apiVersion: v1
-    kind: Pod
-    metadata:
-      name: my-pod
-    spec:
-      nodeName: 'k8s-worker1'
-      containers:
-      - name: pod1
-        image: xiaopeng163/net-box
-        command: ["sh", "-c", "while true; do echo $(date) >> /tmp/index.html; sleep 60; done"]
-      - name: pod2
-        image: xiaopeng163/net-box
-        command: ["sh", "-c", "while true; do echo $(date) >> /tmp/index.html; sleep 60; done"]
+.. code-block:: bash
+
+  kubectl apply -f https://raw.githubusercontent.com/xiaopeng163/learn-k8s-from-scratch/master/source/_code/network/container-to-container.yml
+
+
+.. literalinclude:: ../_code/network/container-to-container.yml
+   :language: yaml
+   :linenos:
 
 
 Pod to Pod (single node)
