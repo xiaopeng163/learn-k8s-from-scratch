@@ -7,9 +7,9 @@ kubeadm
 环境准备
 ~~~~~~~~~
 
-准备三台Linux机器（本文以Ubuntu20.04LTS系统为例），三台机器之间能相互通信。
+准备三台Linux机器（本文以Ubuntu22.04LTS系统为例），三台机器之间能相互通信。
 
-以下是本文使用的三台Ubuntu 20.04LTS：
+以下是本文使用的三台Ubuntu 22.04LTS：
 
 
 .. list-table:: Kubeadm环境主机
@@ -21,15 +21,15 @@ kubeadm
      - memory
    * - k8s-master
      - 192.168.56.10
-     - Ubuntu 20.04 LTS
+     - Ubuntu 22.04 LTS
      - 4GB
    * - k8s-worker1
      - 192.168.56.11
-     - Ubuntu 20.04 LTS
+     - Ubuntu 22.04 LTS
      - 2GB
    * - k8s-worker2
      - 192.168.56.12
-     - Ubuntu 20.04 LTS
+     - Ubuntu 22.04 LTS
      - 2GB
 
 .. code-block:: markdown
@@ -68,60 +68,41 @@ kubeadm
 
 然后分别在三台机器上执行sudo sh master.sh 运行脚本。
 
-.. note::
 
-   如果要修改Kubernetes版本，请修改下面脚本的最后一行，当前我们使用的版本是 ``1.29.2``, 可以通过命令 ``apt list -a kubeadm`` 查看可用版本
+.. literalinclude:: ../_code/k8s-install/install.sh
+   :language: shell
+   :linenos:
+
+脚本结束以后， 在master节点上运行  ``apt list -a kubeadm`` 查看可用版本， 当前我们使用的版本是 ``1.29.2-1.1``
 
 .. code-block:: bash
 
-  #!/bin/bash
+  $ apt list -a kubeadm
+  Listing... Done
+  kubeadm/unknown 1.29.2-1.1 amd64
+  kubeadm/unknown 1.29.1-1.1 amd64
+  kubeadm/unknown 1.29.0-1.1 amd64
 
-  echo "[TASK 1] Disable and turn off SWAP"
-  sed -i '/swap/d' /etc/fstab
-  swapoff -a
+  kubeadm/unknown,now 1.29.2-1.1 arm64 [installed]
+  kubeadm/unknown 1.29.1-1.1 arm64
+  kubeadm/unknown 1.29.0-1.1 arm64
 
-  echo "[TASK 2] Stop and Disable firewall"
-  systemctl disable --now ufw >/dev/null 2>&1
+  kubeadm/unknown 1.29.2-1.1 ppc64el
+  kubeadm/unknown 1.29.1-1.1 ppc64el
+  kubeadm/unknown 1.29.0-1.1 ppc64el
 
-  echo "[TASK 3] Enable and Load Kernel modules"
-  cat >>/etc/modules-load.d/containerd.conf<<EOF
-  overlay
-  br_netfilter
-  EOF
-  modprobe overlay
-  modprobe br_netfilter
+  kubeadm/unknown 1.29.2-1.1 s390x
+  kubeadm/unknown 1.29.1-1.1 s390x
+  kubeadm/unknown 1.29.0-1.1 s390x
 
-  echo "[TASK 4] Add Kernel settings"
-  cat >>/etc/sysctl.d/kubernetes.conf<<EOF
-  net.bridge.bridge-nf-call-ip6tables = 1
-  net.bridge.bridge-nf-call-iptables  = 1
-  net.ipv4.ip_forward                 = 1
-  EOF
-  sysctl --system >/dev/null 2>&1
+在所有节点上运行下面的命令安装kubeadm/kubelet/kubectl，确保版本一致。
 
-  echo "[TASK 5] Install containerd runtime"
-  mkdir -p /etc/apt/keyrings
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-  echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  apt -qq update >/dev/null 2>&1
-  apt install -qq -y containerd.io >/dev/null 2>&1
-  containerd config default >/etc/containerd/config.toml
-  sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
-  systemctl restart containerd
-  systemctl enable containerd >/dev/null 2>&1
+.. code-block:: bash
 
-  echo "[TASK 6] Add apt repo for kubernetes"
-  apt-get install -y apt-transport-https ca-certificates curl gpg >/dev/null 2>&1
-  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-  echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
-
-  echo "[TASK 7] Install Kubernetes components (kubeadm, kubelet and kubectl)"
-  apt -qq update >/dev/null 2>&1
-  apt install -qq -y kubeadm=1.29.2-1.1 kubelet=1.29.2-1.1 kubectl=1.29.2-1.1  >/dev/null 2>&1
+  sudo apt install -qq -y kubeadm=1.29.2-1.1 kubelet=1.29.2-1.1 kubectl=1.29.2-1.1
 
 
-脚本结束以后，可以检查下kubeadm，kubelet，kubectl的安装情况,如果都能获取到版本号，说明安装成功。
+可以检查下kubeadm，kubelet，kubectl的安装情况,如果都能获取到版本号，说明安装成功。
 
 
 .. code-block:: bash
