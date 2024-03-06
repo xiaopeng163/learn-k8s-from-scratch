@@ -63,10 +63,12 @@ kubeadm
 安装containerd, kubeadm, kubelet, kubectl
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+在所有节点上运行下面的命令安装containerd和一些必要的工具。
 
-把下面的shell脚本保存成一个文件，比如叫master.sh，放到三台机器里。
+.. code-block:: bash
 
-然后分别在三台机器上执行sudo sh master.sh 运行脚本。
+  curl -fsSL https://raw.githubusercontent.com/xiaopeng163/learn-k8s-from-scratch/master/source/_code/k8s-install/install.sh -o install.sh
+  sudo sh install.sh
 
 
 .. literalinclude:: ../_code/k8s-install/install.sh
