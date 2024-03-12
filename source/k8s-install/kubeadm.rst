@@ -227,6 +227,10 @@ more information can be found https://kubernetes.io/docs/reference/kubectl/cheat
 
 下载文件 https://raw.githubusercontent.com/flannel-io/flannel/v0.24.2/Documentation/kube-flannel.yml ，并进行如下修改：
 
+.. code-block:: bash
+
+    curl -LO https://raw.githubusercontent.com/flannel-io/flannel/v0.24.2/Documentation/kube-flannel.yml
+
 
 确保network是我们配置的 --pod-network-cidr  10.244.0.0/16
 
