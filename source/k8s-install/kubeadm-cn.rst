@@ -64,70 +64,36 @@ kubeadm - 中国大陆版
 安装containerd, kubeadm, kubelet, kubectl
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-把下面的shell脚本保存成一个文件，比如叫master.sh，放到三台机器里。
-
-然后分别在三台机器上执行sudo sh master.sh 运行脚本。
-
-.. note::
-
-   如果要修改Kubernetes版本，请修改下面脚本的最后一行，当前我们使用的版本是 ``1.28.0``, 可以通过命令 ``apt list -a kubeadm`` 查看可用版本
+在所有节点上运行下面的命令安装containerd和一些必要的工具。
 
 .. code-block:: bash
 
-    #!/bin/bash
+  curl -fsSL https://raw.githubusercontent.com/xiaopeng163/learn-k8s-from-scratch/master/source/_code/k8s-install/install-cn.sh -o install.sh
+  sudo sh install.sh
 
-    # setup timezone
-    echo "[TASK 0] Set timezone"
-    timedatectl set-timezone Asia/Shanghai
-    apt-get install -y ntpdate >/dev/null 2>&1
-    ntpdate ntp.aliyun.com
+.. literalinclude:: ../_code/k8s-install/install-cn.sh
+   :language: shell
+   :linenos:
 
+脚本结束以后， 在master节点上运行  ``apt list -a kubeadm`` 查看可用版本， 当前我们使用的版本是 ``1.28.2-00``
 
-    echo "[TASK 1] Disable and turn off SWAP"
-    sed -i '/swap/d' /etc/fstab
-    swapoff -a
+.. code-block:: bash
 
-    echo "[TASK 2] Stop and Disable firewall"
-    systemctl disable --now ufw >/dev/null 2>&1
+  $ sudo apt list -a kubeadm | more
 
-    echo "[TASK 3] Enable and Load Kernel modules"
-    cat >>/etc/modules-load.d/containerd.conf <<EOF
-    overlay
-    br_netfilter
-    EOF
-    modprobe overlay
-    modprobe br_netfilter
+  WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
 
-    echo "[TASK 4] Add Kernel settings"
-    cat >>/etc/sysctl.d/kubernetes.conf <<EOF
-    net.bridge.bridge-nf-call-ip6tables = 1
-    net.bridge.bridge-nf-call-iptables  = 1
-    net.ipv4.ip_forward                 = 1
-    EOF
-    sysctl --system >/dev/null 2>&1
+  Listing...
+  kubeadm/kubernetes-xenial 1.28.2-00 amd64
+  kubeadm/kubernetes-xenial 1.28.1-00 amd64
+  kubeadm/kubernetes-xenial 1.28.0-00 amd64
+  kubeadm/kubernetes-xenial 1.27.6-00 amd64
 
-    echo "[TASK 5] Install containerd runtime"
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    apt -qq update >/dev/null 2>&1
-    apt install -qq -y containerd.io >/dev/null 2>&1
-    containerd config default >/etc/containerd/config.toml
-    sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
-    sed -i 's/registry.k8s.io\/pause:3.6/registry.aliyuncs.com\/google_containers\/pause:3.9/g' /etc/containerd/config.toml
-    systemctl restart containerd
-    systemctl enable containerd >/dev/null 2>&1
+在所有节点上运行下面的命令安装kubeadm/kubelet/kubectl，确保版本一致。
 
+.. code-block:: bash
 
-    echo "[TASK 6] Add apt repo for kubernetes"
-    curl -fsSL https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add > /dev/null 2>&1
-    echo "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null 2>&1
-    apt-get update >/dev/null 2>&1
-
-    echo "[TASK 7] Install Kubernetes components (kubeadm, kubelet and kubectl)"
-    apt install -qq -y kubeadm=1.28.0-00 kubelet=1.28.0-00 kubectl=1.28.0-00 >/dev/null 2>&1
+  sudo apt install  -y kubeadm=1.28.2-00 kubelet=1.28.2-00 kubectl=1.28.2-00
 
 
 脚本结束以后，可以检查下kubeadm，kubelet，kubectl的安装情况,如果都能获取到版本号，说明安装成功。

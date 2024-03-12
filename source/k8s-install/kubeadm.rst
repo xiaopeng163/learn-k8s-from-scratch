@@ -101,7 +101,7 @@ kubeadm
 
 .. code-block:: bash
 
-  sudo apt install -qq -y kubeadm=1.29.2-1.1 kubelet=1.29.2-1.1 kubectl=1.29.2-1.1
+  sudo apt install  -y kubeadm=1.29.2-1.1 kubelet=1.29.2-1.1 kubectl=1.29.2-1.1
 
 
 可以检查下kubeadm，kubelet，kubectl的安装情况,如果都能获取到版本号，说明安装成功。
