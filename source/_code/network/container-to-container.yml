@@ -3,7 +3,7 @@
   metadata:
     name: my-pod
   spec:
-    nodeName: 'k8s-worker1'
+    nodeName: 'k8s-worker1' # 指定节点，请根据实际情况修改
     containers:
     - name: container1
       image: xiaopeng163/net-box

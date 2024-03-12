@@ -124,33 +124,27 @@ Container to Container in Pod
       inet6 fe80::b487:92ff:fee4:4043/64 scope link
         valid_lft forever preferred_lft forever
 
+结论就是两个container可以通过localhost进行通信，它们在同一个network namespace中。
+
+清理测试Pod
+
+.. code-block:: bash
+
+  kubectl delete -f https://raw.githubusercontent.com/xiaopeng163/learn-k8s-from-scratch/master/source/_code/network/container-to-container.yml
+
 
 Pod to Pod (single node)
 -----------------------------
 
-.. code-block:: yaml
+创建测试Pod
 
-    apiVersion: v1
-    kind: Pod
-    metadata:
-      name: mypod1
-    spec:
-      nodeName: 'k8s-worker1'
-      containers:
-      - name: pod1
-        image: xiaopeng163/net-box
-        command: ["sh", "-c", "while true; do echo $(date) >> /tmp/index.html; sleep 60; done"]
-    ---
-    apiVersion: v1
-    kind: Pod
-    metadata:
-      name: mypod2
-    spec:
-      nodeName: 'k8s-worker1'
-      containers:
-      - name: pod2
-        image: xiaopeng163/net-box
-        command: ["sh", "-c", "while true; do echo $(date) >> /tmp/index.html; sleep 60; done"]
+.. code-block:: bash
+
+  kubectl apply -f https://raw.githubusercontent.com/xiaopeng163/learn-k8s-from-scratch/master/source/_code/network/pod-to-pod-single-node.yml
+
+.. literalinclude:: ../_code/network/pod-to-pod-single-node.yml
+   :language: yaml
+   :linenos:
 
 
 Pod to Pod (multi-Node)
