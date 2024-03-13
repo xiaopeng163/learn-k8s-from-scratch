@@ -18,7 +18,7 @@ Learn Kubernetes from Scratch
 
 
 感谢以下对此文档做出贡献的同学（排名不分高低和先后）：
---------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. contributors:: xiaopeng163/learn-k8s-from-scratch
    :avatars:
