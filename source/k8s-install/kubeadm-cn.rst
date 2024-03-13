@@ -3,14 +3,14 @@ kubeadm - 中国大陆版
 
 .. warning::
 
-   如果您无法访问谷歌，那么请继续阅读本文档。
+   如果您无法访问谷歌，那么请继续阅读本文档。否者请参考https://learn-k8s-from-scratch.readthedocs.io/en/latest/k8s-install/kubeadm.html
 
 环境准备
 ~~~~~~~~~
 
-准备三台Linux机器（本文以Ubuntu20.04LTS系统为例），三台机器之间能相互通信。
+准备三台Linux机器（本文以Ubuntu22.04LTS系统为例），三台机器之间能相互通信。
 
-以下是本文使用的三台Ubuntu 20.04LTS：
+以下是本文使用的三台Ubuntu 22.04LTS：
 
 
 .. list-table:: Kubeadm环境主机
@@ -22,15 +22,15 @@ kubeadm - 中国大陆版
      - memory
    * - k8s-master
      - 192.168.56.10
-     - Ubuntu 20.04 LTS
+     - Ubuntu 22.04 LTS
      - 4GB
    * - k8s-worker1
      - 192.168.56.11
-     - Ubuntu 20.04 LTS
+     - Ubuntu 22.04 LTS
      - 2GB
    * - k8s-worker2
      - 192.168.56.12
-     - Ubuntu 20.04 LTS
+     - Ubuntu 22.04 LTS
      - 2GB
 
 .. code-block:: markdown
@@ -57,7 +57,7 @@ kubeadm - 中国大陆版
 
 .. warning::
 
-   如果你使用的是云服务提供的虚拟机，请确保把安全策略组配置好，确保三台机器之间可以访问任意端口，https://kubernetes.io/docs/reference/ports-and-protocols/
+   如果你使用的是云服务提供的虚拟机，请确保把安全策略组配置好，确保三台机器之间可以访问任意端口，或者开放特定端口，具体端口请参考 https://kubernetes.io/docs/reference/ports-and-protocols/
 
 
 
@@ -88,6 +88,11 @@ kubeadm - 中国大陆版
   kubeadm/kubernetes-xenial 1.28.1-00 amd64
   kubeadm/kubernetes-xenial 1.28.0-00 amd64
   kubeadm/kubernetes-xenial 1.27.6-00 amd64
+
+.. warning::
+
+   具体使用哪个版本，请参考考试文档要求 https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/
+
 
 在所有节点上运行下面的命令安装kubeadm/kubelet/kubectl，确保版本一致。
 
