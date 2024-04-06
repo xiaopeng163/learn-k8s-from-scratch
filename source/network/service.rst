@@ -28,7 +28,7 @@ Kube-proxy watches the API Server and Endpoints
 Lab
 -----
 
-创建一个Deployment
+创建一个Deployment (国内无法访问google的朋友，请替换下面image为 `xiaopeng163/hello-app:1.0`)
 
 .. code-block:: yaml
 
@@ -176,7 +176,7 @@ Azure kubernetes cluster
   aks-services-38564575-vmss000003     Ready    agent   4m56s   v1.21.9   10.224.0.4    <none>        Ubuntu 18.04.6 LTS   5.4.0-1083-azure   containerd://1.4.13+azure-3
   aks-workspaces-33629094-vmss000003   Ready    agent   5m10s   v1.21.9   10.224.0.5    <none>        Ubuntu 18.04.6 LTS   5.4.0-1083-azure   containerd://1.4.13+azure-3
 
-create Deoployment
+create Deoployment,(国内无法访问google的朋友，请替换下面image为 `xiaopeng163/hello-app:1.0`)
 
 .. code-block:: yaml
 

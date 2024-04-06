@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# setup timezone
+echo "[TASK 0] Set timezone"
+timedatectl set-timezone Asia/Shanghai
+apt-get install -y ntpdate >/dev/null 2>&1
+ntpdate ntp.aliyun.com
+
+
 echo "[TASK 1] Disable and turn off SWAP"
 sed -i '/swap/d' /etc/fstab
 swapoff -a
@@ -8,7 +15,7 @@ echo "[TASK 2] Stop and Disable firewall"
 systemctl disable --now ufw >/dev/null 2>&1
 
 echo "[TASK 3] Enable and Load Kernel modules"
-cat >>/etc/modules-load.d/containerd.conf<<EOF
+cat >>/etc/modules-load.d/containerd.conf <<EOF
 overlay
 br_netfilter
 EOF
@@ -16,7 +23,7 @@ modprobe overlay
 modprobe br_netfilter
 
 echo "[TASK 4] Add Kernel settings"
-cat >>/etc/sysctl.d/kubernetes.conf<<EOF
+cat >>/etc/sysctl.d/kubernetes.conf <<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables  = 1
 net.ipv4.ip_forward                 = 1
@@ -31,15 +38,18 @@ echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docke
 apt -qq update >/dev/null 2>&1
 apt install -qq -y containerd.io >/dev/null 2>&1
 containerd config default >/etc/containerd/config.toml
-sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+str1="registry.k8s.io/pause:3.8"
+str2="registry.aliyuncs.com/google_containers/pause:3.9"
+sed -i "/sandbox_image/ s%${str1}%${str2}%g" /etc/containerd/config.toml
+sed -i '/SystemdCgroup/ s/false/true/g' /etc/containerd/config.toml
 systemctl restart containerd
-systemctl enable containerd >/dev/null 2>&1
+systemctl enable containerd > /dev/null 2>&1
+
 
 echo "[TASK 6] Add apt repo for kubernetes"
-apt-get install -y apt-transport-https ca-certificates curl gpg >/dev/null 2>&1
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
+curl -fsSL https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add > /dev/null 2>&1
+echo "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null 2>&1
+apt-get update >/dev/null 2>&1
 
 echo "[TASK 7] Install Kubernetes components (kubeadm, kubelet and kubectl)"
-apt -qq update >/dev/null 2>&1
-apt install -qq -y kubeadm=1.29.2-1.1 kubelet=1.29.2-1.1 kubectl=1.29.2-1.1  >/dev/null 2>&1
+apt install -qq -y kubeadm=1.28.0-00 kubelet=1.28.0-00 kubectl=1.28.0-00 >/dev/null 2>&1

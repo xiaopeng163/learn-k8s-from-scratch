@@ -6,7 +6,7 @@ Labels
 - Label Selectors are used to select/query Objects
 
 
-adding and eidting labels
+adding and editing labels
 -----------------------------------
 
 - imperatively with kubectl

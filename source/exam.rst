@@ -104,3 +104,11 @@ json处理
     $ kubectl delete pod <name> --grace-period=0 --force
 
 同样也可以定义变量节省时间
+
+
+设置alias，节省敲命令的时间
+--------------------------------
+
+.. image:: _static/kube-alias.jpeg
+   :width: 600
+   :alt: k8s-alias

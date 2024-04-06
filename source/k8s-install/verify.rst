@@ -5,12 +5,14 @@ kubeadm集群验证
 
 .. code-block:: bash
 
-    vagrant@k8s-master:~$ kubectl get nodes
-    NAME          STATUS   ROLES           AGE     VERSION
-    k8s-master    Ready    control-plane   3h49m   v1.24.0
-    k8s-worker1   Ready    <none>          3h47m   v1.24.0
-    k8s-worker2   Ready    <none>          3h46m   v1.24.0
-    vagrant@k8s-master:~$
+    kubectl get nodes -o wide
+
+.. code-block:: bash
+
+    NAME          STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+    k8s-master    Ready    control-plane   38m   v1.29.2   10.211.55.4   <none>        Ubuntu 22.04.2 LTS   5.15.0-76-generic   containerd://1.6.28
+    k8s-worker1   Ready    <none>          21m   v1.29.2   10.211.55.5   <none>        Ubuntu 22.04.2 LTS   5.15.0-97-generic   containerd://1.6.28
+    k8s-worker2   Ready    <none>          21m   v1.29.2   10.211.55.6   <none>        Ubuntu 22.04.2 LTS   5.15.0-76-generic   containerd://1.6.28
 
 
 创建pod
@@ -20,12 +22,20 @@ kubeadm集群验证
 
 .. code-block:: bash
 
-    vagrant@k8s-master:~$ kubectl run web --image nginx
+    kubectl run web --image nginx
+
+.. code-block:: bash
+
     pod/web created
-    vagrant@k8s-master:~$ kubectl get pods
-    NAME   READY   STATUS    RESTARTS   AGE
-    web    1/1     Running   0          5s
-    vagrant@k8s-master:~$
+
+.. code-block:: bash
+
+    kubectl get pods -o wide
+
+.. code-block:: bash
+
+    NAME   READY   STATUS    RESTARTS   AGE   IP           NODE          NOMINATED NODE   READINESS GATES
+    web    1/1     Running   0          63s   10.244.1.2   k8s-worker1   <none>           <none>
 
 创建service
 -------------
@@ -34,13 +44,25 @@ kubeadm集群验证
 
 .. code-block:: bash
 
-    vagrant@k8s-master:~$ kubectl expose pod web  --port=80 --name=web-service
+    kubectl expose pod web  --port=80 --name=web-service
+
+.. code-block:: bash
+
     service/web-service exposed
-    vagrant@k8s-master:~$ kubectl get service
+
+.. code-block:: bash
+
+    kubectl get service
+
+.. code-block:: bash
+
     NAME          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
     kubernetes    ClusterIP   10.96.0.1       <none>        443/TCP   3h53m
     web-service   ClusterIP   10.98.102.238   <none>        80/TCP    4s
-    vagrant@k8s-master:~$ curl 10.98.102.238
+
+.. code-block:: bash
+
+    curl 10.98.102.238
     <!DOCTYPE html>
     <html>
     <head>

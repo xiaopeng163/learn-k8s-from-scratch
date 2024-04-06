@@ -1,7 +1,14 @@
 Introduction
 ===============
 
-容器技术？ https://dockertips.readthedocs.io/en/latest/docker-install/docker-intro.html
+.. note::
+
+   容器技术？ 如果对容器技术和Docker没有了解，建议先学习一下，或者参考我的另外一个关于Docker的免费在线文档
+
+   https://dockertips.readthedocs.io/en/latest/docker-install/docker-intro.html
+
+
+
 
 
 Container Orchestration

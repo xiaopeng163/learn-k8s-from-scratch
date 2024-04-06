@@ -86,6 +86,8 @@ Kubernetes 服务的自动发现。
 DNS
 ------
 
+(国内无法访问google的朋友，请替换下面image为 `xiaopeng163/hello-app:1.0`)
+
 .. code-block:: bash
 
     $ kubectl create deployment demo --image=gcr.io/google-samples/hello-app:1.0 --port=8080
