@@ -438,6 +438,12 @@ Fix node internal IP issue
       inet6 fe80::a00:27ff:fee1:e569/64 scope link
         valid_lft forever preferred_lft forever
 
+join完成后在master节点上执行如下命令将worker1和worker2节点标记为worker role
+
+.. code-block:: bash
+kubectl label node worker1 node-role.kubernetes.io/worker=worker
+kubectl label node worker2 node-role.kubernetes.io/worker=worker
+
 
 修改文件 `/etc/systemd/system/kubelet.service.d/10-kubeadm.conf` ， 在最后一行末尾增加一个新的变量KUBELET_EXTRA_ARGS， 指定node ip是本机的enp0s8的地址，保存退出。
 
