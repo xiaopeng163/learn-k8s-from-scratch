@@ -61,7 +61,7 @@ Approve ``CertificateSigning`` Requst object
 
 .. code-block:: bash
 
-    $ # approe the CSR
+    $ # approve the CSR
     $ kubectl certificate approve demouser
 
     # retrieve the certificate from the CSR object, and decode it from base64
