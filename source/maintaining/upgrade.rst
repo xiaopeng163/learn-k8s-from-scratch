@@ -48,7 +48,7 @@ Upgrade Control Plane
     kubectl uncordon k8s-master
 
     # update kubelet and kubectl
-    sudo apt-mark unhold kubelt kubectl
+    sudo apt-mark unhold kubelet kubectl
     sudo apt-get update
     sudo apt-get install -y kubelet=$TARGET_VERSION kubectl=$TARGET_VERSION
     sudo apt-mark hold kubelet kubectl
@@ -74,7 +74,7 @@ Upgrade work node
     sudo kubeadm upgrade node
 
     # update kubelet and kubectl
-    sudo apt-mark unhold kubelt
+    sudo apt-mark unhold kubelet
     sudo apt-get update
     sudo apt-get install -y kubelet=$TARGET_VERSION
     sudo apt-mark hold kubelet
