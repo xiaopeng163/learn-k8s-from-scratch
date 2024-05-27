@@ -340,9 +340,9 @@ more information can be found https://kubernetes.io/docs/reference/kubectl/cheat
 
 .. warning::
 
-  不小心忘记join的``token``和``discovery-token-ca-cert-hash`` 怎么办？
+  不小心忘记join的 ``token`` 和 ``discovery-token-ca-cert-hash`` 怎么办？
 
-token 可以通过 ``kubeadm token list``获取到，比如 ``0pdoeh.wrqchegv3xm3k1ow``
+token 可以通过 ``kubeadm token list`` 获取到，比如 ``0pdoeh.wrqchegv3xm3k1ow`` 。
 
 .. code-block:: bash
 
@@ -441,8 +441,9 @@ Fix node internal IP issue
 join完成后在master节点上执行如下命令将worker1和worker2节点标记为worker role
 
 .. code-block:: bash
-kubectl label node worker1 node-role.kubernetes.io/worker=worker
-kubectl label node worker2 node-role.kubernetes.io/worker=worker
+
+  kubectl label node worker1 node-role.kubernetes.io/worker=worker
+  kubectl label node worker2 node-role.kubernetes.io/worker=worker
 
 
 修改文件 `/etc/systemd/system/kubelet.service.d/10-kubeadm.conf` ， 在最后一行末尾增加一个新的变量KUBELET_EXTRA_ARGS， 指定node ip是本机的enp0s8的地址，保存退出。
