@@ -79,29 +79,34 @@ kubeadm
 
 .. code-block:: bash
 
-  $ apt list -a kubeadm
+  $ sudo apt list -a kubeadm
   Listing... Done
-  kubeadm/unknown 1.29.2-1.1 amd64
-  kubeadm/unknown 1.29.1-1.1 amd64
-  kubeadm/unknown 1.29.0-1.1 amd64
+  kubeadm/unknown 1.30.3-1.1 amd64
+  kubeadm/unknown 1.30.2-1.1 amd64
+  kubeadm/unknown 1.30.1-1.1 amd64
+  kubeadm/unknown 1.30.0-1.1 amd64
 
-  kubeadm/unknown,now 1.29.2-1.1 arm64 [installed]
-  kubeadm/unknown 1.29.1-1.1 arm64
-  kubeadm/unknown 1.29.0-1.1 arm64
+  kubeadm/unknown 1.30.3-1.1 arm64
+  kubeadm/unknown 1.30.2-1.1 arm64
+  kubeadm/unknown 1.30.1-1.1 arm64
+  kubeadm/unknown 1.30.0-1.1 arm64
 
-  kubeadm/unknown 1.29.2-1.1 ppc64el
-  kubeadm/unknown 1.29.1-1.1 ppc64el
-  kubeadm/unknown 1.29.0-1.1 ppc64el
+  kubeadm/unknown 1.30.3-1.1 ppc64el
+  kubeadm/unknown 1.30.2-1.1 ppc64el
+  kubeadm/unknown 1.30.1-1.1 ppc64el
+  kubeadm/unknown 1.30.0-1.1 ppc64el
 
-  kubeadm/unknown 1.29.2-1.1 s390x
-  kubeadm/unknown 1.29.1-1.1 s390x
-  kubeadm/unknown 1.29.0-1.1 s390x
+  kubeadm/unknown 1.30.3-1.1 s390x
+  kubeadm/unknown 1.30.2-1.1 s390x
+  kubeadm/unknown 1.30.1-1.1 s390x
+  kubeadm/unknown 1.30.0-1.1 s390x
 
 在所有节点上运行下面的命令安装kubeadm/kubelet/kubectl，确保版本一致。
 
 .. code-block:: bash
 
-  sudo apt install  -y kubeadm=1.29.2-1.1 kubelet=1.29.2-1.1 kubectl=1.29.2-1.1
+  VERSION=1.30.3-1.1
+  sudo apt install -y kubeadm=$VERSION kubelet=$VERSION kubectl=$VERSION
 
 
 可以检查下kubeadm，kubelet，kubectl的安装情况,如果都能获取到版本号，说明安装成功。
@@ -111,7 +116,7 @@ kubeadm
 
     kubeadm version
     kubelet --version
-    kubectl version
+    kubectl version --client=true
 
 初始化master节点
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -130,13 +135,13 @@ kubeadm
 
 .. code-block:: bash
 
-  [config/images] Pulled registry.k8s.io/kube-apiserver:v1.29.2
-  [config/images] Pulled registry.k8s.io/kube-controller-manager:v1.29.2
-  [config/images] Pulled registry.k8s.io/kube-scheduler:v1.29.2
-  [config/images] Pulled registry.k8s.io/kube-proxy:v1.29.2
+  [config/images] Pulled registry.k8s.io/kube-apiserver:v1.30.3
+  [config/images] Pulled registry.k8s.io/kube-controller-manager:v1.30.3
+  [config/images] Pulled registry.k8s.io/kube-scheduler:v1.30.3
+  [config/images] Pulled registry.k8s.io/kube-proxy:v1.30.3
   [config/images] Pulled registry.k8s.io/coredns/coredns:v1.11.1
   [config/images] Pulled registry.k8s.io/pause:3.9
-  [config/images] Pulled registry.k8s.io/etcd:3.5.10-0
+  [config/images] Pulled registry.k8s.io/etcd:3.5.12-0
 
 初始化Kubeadm
 
@@ -145,7 +150,7 @@ kubeadm
 
 .. code-block:: bash
 
-    vagrant@k8s-master:~$ sudo kubeadm init --apiserver-advertise-address=192.168.56.10  --pod-network-cidr=10.244.0.0/16
+    sudo kubeadm init --apiserver-advertise-address=192.168.56.10  --pod-network-cidr=10.244.0.0/16
 
 最后一段的输出要保存好, 这一段指出后续需要做什么配置。
 
@@ -195,18 +200,18 @@ kubeadm
 
 .. code-block:: bash
 
-  vagrant@k8s-master:~$ kubectl get nodes -o wide
-  NAME         STATUS     ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-  k8s-master   NotReady   control-plane   3m10s   v1.29.2   10.211.55.4   <none>        Ubuntu 22.04.2 LTS   5.15.0-76-generic   containerd://1.6.28
-  vagrant@k8s-master:~$ kubectl get pod -A
+  parallels@k8s-master:~$ kubectl get node -o wide
+  NAME         STATUS     ROLES           AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION       CONTAINER-RUNTIME
+  k8s-master   NotReady   control-plane   63s   v1.30.3   10.211.55.11   <none>        Ubuntu 22.04.2 LTS   5.15.0-117-generic   containerd://1.7.19
+  parallels@k8s-master:~$ kubectl get pod -A
   NAMESPACE     NAME                                 READY   STATUS    RESTARTS   AGE
-  kube-system   coredns-76f75df574-4l8fv             0/1     Pending   0          3m18s
-  kube-system   coredns-76f75df574-ztqqx             0/1     Pending   0          3m18s
-  kube-system   etcd-k8s-master                      1/1     Running   0          3m32s
-  kube-system   kube-apiserver-k8s-master            1/1     Running   0          3m32s
-  kube-system   kube-controller-manager-k8s-master   1/1     Running   0          3m33s
-  kube-system   kube-proxy-4mzl6                     1/1     Running   0          3m18s
-  kube-system   kube-scheduler-k8s-master            1/1     Running   0          3m32s
+  kube-system   coredns-7db6d8ff4d-c5xr9             0/1     Pending   0          3m11s
+  kube-system   coredns-7db6d8ff4d-g256n             0/1     Pending   0          3m11s
+  kube-system   etcd-k8s-master                      1/1     Running   0          3m26s
+  kube-system   kube-apiserver-k8s-master            1/1     Running   0          3m26s
+  kube-system   kube-controller-manager-k8s-master   1/1     Running   0          3m26s
+  kube-system   kube-proxy-g2gqs                     1/1     Running   0          3m12s
+  kube-system   kube-scheduler-k8s-master            1/1     Running   0          3m26s
 
 shell 自动补全(Bash)
 
@@ -220,7 +225,7 @@ more information can be found https://kubernetes.io/docs/reference/kubectl/cheat
 
 2. 部署pod network方案
 
-去https://kubernetes.io/docs/concepts/cluster-administration/addons/ 选择一个network方案， 根据提供的具体链接去部署。
+去 https://kubernetes.io/docs/concepts/cluster-administration/addons/ 选择一个network方案， 根据提供的具体链接去部署。
 
 
 这里我们选择overlay的方案，名字叫 ``flannel`` 部署方法如下：
@@ -229,7 +234,7 @@ more information can be found https://kubernetes.io/docs/reference/kubectl/cheat
 
 .. code-block:: bash
 
-    curl -LO https://raw.githubusercontent.com/flannel-io/flannel/v0.24.2/Documentation/kube-flannel.yml
+  curl -LO https://github.com/flannel-io/flannel/releases/download/v0.25.5/kube-flannel.yml
 
 
 确保network是我们配置的 --pod-network-cidr  10.244.0.0/16
@@ -323,8 +328,8 @@ more information can be found https://kubernetes.io/docs/reference/kubectl/cheat
 .. code-block:: bash
 
   kubectl get node -o wide
-  NAME         STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-  k8s-master   Ready    control-plane   15m   v1.29.2   10.211.55.4   <none>        Ubuntu 22.04.2 LTS   5.15.0-76-generic   containerd://1.6.28
+  NAME         STATUS   ROLES           AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION       CONTAINER-RUNTIME
+  k8s-master   Ready    control-plane   8m24s   v1.30.3   10.211.55.11   <none>        Ubuntu 22.04.2 LTS   5.15.0-117-generic   containerd://1.7.19
 
 添加worker节点
 ~~~~~~~~~~~~~~~~~
@@ -365,11 +370,10 @@ token 可以通过 ``kubeadm token list`` 获取到，比如 ``0pdoeh.wrqchegv3x
 .. code-block:: bash
 
   vagrant@k8s-master:~$ kubectl get nodes -o wide
-  NAME          STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-  k8s-master    Ready    control-plane   17m   v1.29.2   10.211.55.4   <none>        Ubuntu 22.04.2 LTS   5.15.0-76-generic   containerd://1.6.28
-  k8s-worker1   Ready    <none>          50s   v1.29.2   10.211.55.5   <none>        Ubuntu 22.04.2 LTS   5.15.0-97-generic   containerd://1.6.28
-  k8s-worker2   Ready    <none>          20s   v1.29.2   10.211.55.6   <none>        Ubuntu 22.04.2 LTS   5.15.0-76-generic   containerd://1.6.28
-  vagrant@k8s-master:~$
+  NAME          STATUS   ROLES           AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION       CONTAINER-RUNTIME
+  k8s-master    Ready    control-plane   9h    v1.30.3   10.211.55.11   <none>        Ubuntu 22.04.2 LTS   5.15.0-117-generic   containerd://1.7.19
+  k8s-worker1   Ready    <none>          53s   v1.30.3   10.211.55.12   <none>        Ubuntu 22.04.2 LTS   5.15.0-117-generic   containerd://1.7.19
+  k8s-worker2   Ready    <none>          17s   v1.30.3   10.211.55.13   <none>        Ubuntu 22.04.2 LTS   5.15.0-117-generic   containerd://1.7.19
 
 
 pod的话，应该可以看到三个flannel，三个proxy的pod
@@ -378,19 +382,19 @@ pod的话，应该可以看到三个flannel，三个proxy的pod
 .. code-block:: bash
 
   vagrant@k8s-master:~$ kubectl get pods -A
-  NAMESPACE     NAME                                 READY   STATUS    RESTARTS   AGE
-  kube-system   coredns-6d4b75cb6d-m5vms             1/1     Running   0          3h19m
-  kube-system   coredns-6d4b75cb6d-mmdrx             1/1     Running   0          3h19m
-  kube-system   etcd-k8s-master                      1/1     Running   0          3h19m
-  kube-system   kube-apiserver-k8s-master            1/1     Running   0          3h19m
-  kube-system   kube-controller-manager-k8s-master   1/1     Running   0          3h19m
-  kube-system   kube-flannel-ds-blhqr                1/1     Running   0          3h18m
-  kube-system   kube-flannel-ds-lsbg5                1/1     Running   0          3h16m
-  kube-system   kube-flannel-ds-s7jtf                1/1     Running   0          3h17m
-  kube-system   kube-proxy-jh4w5                     1/1     Running   0          3h17m
-  kube-system   kube-proxy-mttvg                     1/1     Running   0          3h19m
-  kube-system   kube-proxy-v4qxp                     1/1     Running   0          3h16m
-  kube-system   kube-scheduler-k8s-master            1/1     Running   0          3h19m
+  NAMESPACE      NAME                                 READY   STATUS    RESTARTS   AGE
+  kube-flannel   kube-flannel-ds-bp4zf                1/1     Running   0          40s
+  kube-flannel   kube-flannel-ds-m2qwp                1/1     Running   0          75s
+  kube-flannel   kube-flannel-ds-qhhnl                1/1     Running   0          8h
+  kube-system    coredns-7db6d8ff4d-c5xr9             1/1     Running   0          9h
+  kube-system    coredns-7db6d8ff4d-g256n             1/1     Running   0          9h
+  kube-system    etcd-k8s-master                      1/1     Running   0          9h
+  kube-system    kube-apiserver-k8s-master            1/1     Running   0          9h
+  kube-system    kube-controller-manager-k8s-master   1/1     Running   0          9h
+  kube-system    kube-proxy-g2gqs                     1/1     Running   0          9h
+  kube-system    kube-proxy-lvx2n                     1/1     Running   0          40s
+  kube-system    kube-proxy-qsxwd                     1/1     Running   0          75s
+  kube-system    kube-scheduler-k8s-master            1/1     Running   0          9h
 
 
 至此我们的三节点集群搭建完成。
