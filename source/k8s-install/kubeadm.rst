@@ -75,7 +75,7 @@ kubeadm
    :language: shell
    :linenos:
 
-脚本结束以后， 在master节点上运行  ``apt list -a kubeadm`` 查看可用版本， 当前我们使用的版本是 ``1.29.2-1.1``
+脚本结束以后， 在master节点上运行  ``apt list -a kubeadm`` 查看可用版本， 当前我们使用的版本是 ``1.30.3-1.1``
 
 .. code-block:: bash
 
