@@ -74,7 +74,7 @@ Pod with namespace
     containers:
     - image: nginx
       name: web
-  $ kubectl apple -f web.yml
+  $ kubectl apply -f web.yml
 
 Change default namespace
 -----------------------------
