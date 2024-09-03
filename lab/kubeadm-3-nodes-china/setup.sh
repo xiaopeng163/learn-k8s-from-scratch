@@ -3,9 +3,9 @@
 # setup timezone
 echo "[TASK 0] Set timezone"
 timedatectl set-timezone Asia/Shanghai
+apt-get update -y
 apt-get install -y ntpdate >/dev/null 2>&1
 ntpdate ntp.aliyun.com
-
 
 echo "[TASK 1] Disable and turn off SWAP"
 sed -i '/swap/d' /etc/fstab
@@ -32,9 +32,9 @@ sysctl --system >/dev/null 2>&1
 
 echo "[TASK 5] Install containerd runtime"
 mkdir -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+curl -fsSL https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 apt -qq update >/dev/null 2>&1
 apt install -qq -y containerd.io >/dev/null 2>&1
 containerd config default >/etc/containerd/config.toml
@@ -43,12 +43,11 @@ str2="registry.aliyuncs.com/google_containers/pause:3.9"
 sed -i "/sandbox_image/ s%${str1}%${str2}%g" /etc/containerd/config.toml
 sed -i '/SystemdCgroup/ s/false/true/g' /etc/containerd/config.toml
 systemctl restart containerd
-systemctl enable containerd > /dev/null 2>&1
-
+systemctl enable containerd >/dev/null 2>&1
 
 echo "[TASK 6] Add apt repo for kubernetes"
-curl -fsSL https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add > /dev/null 2>&1
-echo "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null 2>&1
+curl -fsSL https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add >/dev/null 2>&1
+echo "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list >/dev/null 2>&1
 apt-get update >/dev/null 2>&1
 
 echo "[TASK 7] Install Kubernetes components (kubeadm, kubelet and kubectl)"
