@@ -375,7 +375,7 @@ Fix node internal IP issue
 -----------------------------
 
 
-如果node的internal IP不对， 例如我们希望的node internal IP地址是en0s8的地址。
+如果node的internal IP不对， 例如我们希望的node internal IP地址是enp0s8的地址。
 
 
 .. code-block:: bash
