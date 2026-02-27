@@ -68,29 +68,16 @@ StorageClass组成
 
 **Cloud Providers:**
 
-+-----------------------------+----------------------------------------------+
-| Provisioner                 | Description                                  |
-+=============================+==============================================+
-| kubernetes.io/aws-ebs       | Amazon EBS volumes                           |
-+-----------------------------+----------------------------------------------+
-| kubernetes.io/gce-pd        | Google Compute Engine Persistent Disks      |
-+-----------------------------+----------------------------------------------+
-| kubernetes.io/azure-disk    | Azure Disk Storage                           |
-+-----------------------------+----------------------------------------------+
-| kubernetes.io/azure-file    | Azure File Storage                           |
-+-----------------------------+----------------------------------------------+
-| kubernetes.io/cinder        | OpenStack Cinder                             |
-+-----------------------------+----------------------------------------------+
+- **kubernetes.io/aws-ebs**: Amazon EBS volumes
+- **kubernetes.io/gce-pd**: Google Compute Engine Persistent Disks
+- **kubernetes.io/azure-disk**: Azure Disk Storage
+- **kubernetes.io/azure-file**: Azure File Storage
+- **kubernetes.io/cinder**: OpenStack Cinder
 
 **In-tree Provisioners:**
 
-+------------------------------+---------------------------------------------+
-| Provisioner                  | Description                                 |
-+==============================+=============================================+
-| kubernetes.io/no-provisioner | No dynamic provisioning, manual PV only     |
-+------------------------------+---------------------------------------------+
-| kubernetes.io/host-path      | HostPath (single node testing only)         |
-+------------------------------+---------------------------------------------+
+- **kubernetes.io/no-provisioner**: No dynamic provisioning, manual PV only
+- **kubernetes.io/host-path**: HostPath (single node testing only)
 
 **External Provisioners (CSI):**
 
