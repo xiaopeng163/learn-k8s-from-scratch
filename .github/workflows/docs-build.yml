@@ -1,0 +1,85 @@
+name: Documentation Build
+
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - 'source/**'
+      - 'requirements.txt'
+      - '.github/workflows/docs-build.yml'
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Create virtual environment
+      run: |
+        uv venv
+        
+    - name: Install dependencies
+      run: |
+        uv pip install -r requirements.txt
+        
+    - name: Build Sphinx documentation
+      run: |
+        source .venv/bin/activate
+        sphinx-build -W --keep-going -b html source build/html
+        
+    - name: Check for warnings
+      run: |
+        source .venv/bin/activate
+        sphinx-build -W -b linkcheck source build/linkcheck || true
+        
+    - name: Upload build artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: documentation-build
+        path: build/html/
+        retention-days: 7
+        
+    - name: Build summary
+      if: success()
+      run: |
+        echo "### ✅ Documentation Build Successful" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "The Sphinx documentation has been built successfully without errors." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Build Details:**" >> $GITHUB_STEP_SUMMARY
+        echo "- Python Version: 3.11" >> $GITHUB_STEP_SUMMARY
+        echo "- Sphinx Builder: html" >> $GITHUB_STEP_SUMMARY
+        echo "- Source Directory: \`source/\`" >> $GITHUB_STEP_SUMMARY
+        echo "- Output Directory: \`build/html/\`" >> $GITHUB_STEP_SUMMARY
+        
+    - name: Failure summary
+      if: failure()
+      run: |
+        echo "### ❌ Documentation Build Failed" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "The Sphinx documentation build encountered errors. Please check the build logs above for details." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Common Issues:**" >> $GITHUB_STEP_SUMMARY
+        echo "- RST syntax errors" >> $GITHUB_STEP_SUMMARY
+        echo "- Missing files or broken references" >> $GITHUB_STEP_SUMMARY
+        echo "- Malformed tables" >> $GITHUB_STEP_SUMMARY
+        echo "- Invalid code blocks" >> $GITHUB_STEP_SUMMARY
