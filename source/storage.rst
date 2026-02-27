@@ -25,6 +25,7 @@ Configuration
    storage/volume
    storage/nfs
    storage/pv-pvc
+   storage/storageclass
    storage/env
    storage/secrets
    storage/configmap

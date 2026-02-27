@@ -9,5 +9,6 @@ Controller and Deployment
    controller-deployment/controller-manager
    controller-deployment/labels
    controller-deployment/deployment
+   controller-deployment/statefulset
    controller-deployment/daemonset
    controller-deployment/job
