@@ -45,7 +45,7 @@ Before Start You Need Know
    api-server-pod
    controller-deployment
    scheduling
-   stroage
+   storage
    network
    security
    maintaining
