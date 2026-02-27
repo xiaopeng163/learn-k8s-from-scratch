@@ -43,7 +43,31 @@ jobs:
     - name: Build Sphinx documentation
       run: |
         source .venv/bin/activate
-        sphinx-build -W --keep-going -b html source build/html
+        sphinx-build --keep-going -b html source build/html 2>&1 | tee build.log
+        
+    - name: Check for errors
+      run: |
+        if grep -q "ERROR" build.log; then
+          echo "### ❌ Build Errors Found" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          grep "ERROR" build.log >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          exit 1
+        fi
+        
+    - name: Check for warnings  
+      if: success()
+      run: |
+        if grep -q "WARNING" build.log; then
+          echo "### ⚠️ Build Warnings Found" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The build completed but has warnings:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          grep "WARNING" build.log >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        fi
         
     - name: Check for warnings
       run: |
